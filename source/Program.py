@@ -55,6 +55,7 @@ class Program():
 		
 		self.drawThread = threading.Thread(target=self.draw_loop)
 		self.drawThread.setDaemon(True)
+		self.drawThread.start()
 		self.event_loop()
 
 	def __is_mouse_over__(self, mX, mY, transform):

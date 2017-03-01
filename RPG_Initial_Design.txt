@@ -53,8 +53,8 @@ __privateVariable__()
 
 roles----------------------------------------------------------------------------------------
 
-Benamin - Art, Monster subclass behaviour
-Doug - Player
+Benamin - Art, Monster subclass(es) behaviour
+Doug - Player, Misc
 Igor - Art, login page
 Jason - main Program, UI classes, Tiles, Entity
 
@@ -66,21 +66,32 @@ anything with a question mark will not be priortized
 Program
  design this class later
 
+Transform
+
+floats:
+ _posX_
+ _posY
+ _sizeX_
+ _sizeY_
+
+ public accessor for each field
+
+ public get_pos, get_size
+ returning tuples
+
+ public set_pos, set_size
+ will go through accessors
+
+
 UI
  __visible__
- int x, y position
- int x, y size
-
- make the __visible__ accessors incase they are needed later
- get_visible() return __visible__
- set_visible(v) __visible__ = v 
+ public accessors
 
  on_clicked() -called from main program
+ on_hover()
  
 
-Entity
- all these are int values:
- x, y position
+Entity derives from Transform
  maxHealth
  health
  damage
