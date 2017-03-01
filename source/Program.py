@@ -72,12 +72,13 @@ class Program():
 		while self.isRunning:
 			
 			for ui in reversed(self.uiComponents):
-				if !self.hoveredUI:
-					if __is_mouse__
-					self.hoveredUI = ui
-					ui.on_hover_begin()
-					break
-			
+				if not self.hoveredUI:
+					if __is_mouse__over__(ui):
+						self.hoveredUI = ui
+						print("hovered over ui")
+						ui.on_hover_begin()
+						break
+
 			
 			
 			for event in pygame.event.get():

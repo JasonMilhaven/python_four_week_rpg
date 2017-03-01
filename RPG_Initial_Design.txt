@@ -99,7 +99,7 @@ floats:
  will go through accessors
 
 
-UI
+UIComponent
  __visible__
  public accessors
 
