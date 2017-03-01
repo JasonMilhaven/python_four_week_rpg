@@ -8,9 +8,6 @@ import pygame
 from UIComponent import *
 from utilities import *
 
-def test():
-	print("test works")
-
 class Program():
 
 	def __init__(self):

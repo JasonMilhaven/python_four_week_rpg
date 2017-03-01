@@ -64,6 +64,9 @@ class design--------------------------------------------------------------------
 anything with a question mark will not be priortized
 
 Program
+
+all members are assumed to be private
+
  constructor()
   WIN_TITLE = "test"
   WIN_WID = 1000
@@ -75,12 +78,34 @@ Program
   uiComponents = empty list
   entities = empty list
  
-  self.pygameSurface = create pygame win with width and height constants
+  pygameSurface = create pygame win with width and height constants
   set window icon
 
   load UI here, add to uiComponent list
 
-  create draw thread
+  create draw thread, start the thread
+  start the main event loop
+
+  is_mouse_over(transform)
+   if mouse in transform bounds
+    return true, otherwise return false
+
+  event_loop()
+   while isRunning
+    if hovered tile
+     call hover event
+    else
+     call end hover event
+   
+    for every pygame event
+     if event is quit
+      isRunning = false
+      safely terminate program and threads
+     if event is mouse down
+      loop through uiComponents
+       if mouse_is_over ui
+        call on_clicked
+   
 
 Transform
 
@@ -105,7 +130,9 @@ UIComponent
 
  on_clicked() -called from main program
  on_hover()
- 
+
+UIComponent
+ load an image upon instantiation
 
 Entity derives from Transform
  maxHealth
@@ -158,15 +185,14 @@ Monster derives from Entity
 
 
 TestMonster
- walk animation
- attack animation
- die animation?
-
  constructor()
+  set animation images
+  set attributes
 
-Tile
+Tile derives from Transform
  texture
  x, y position
+ isBlocking
  moveSpeed modifier
  spawnableMonster list
  
