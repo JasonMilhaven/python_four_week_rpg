@@ -27,6 +27,7 @@ class Program():
 		self.isRunning = True
 		self.isInGame = False
 		self.uiComponents = []
+		self.hoveredUI = None
 		
 		# in game
 		self.player = None
@@ -69,6 +70,16 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
+			
+			for ui in reversed(self.uiComponents):
+				if !self.hoveredUI:
+					if __is_mouse__
+					self.hoveredUI = ui
+					ui.on_hover_begin()
+					break
+			
+			
+			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.isRunning = False
