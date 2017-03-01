@@ -69,13 +69,18 @@ class Program():
 		return ret
 	
 	def event_loop(self):
+		
 		while self.isRunning:
-			
+			mX, mY = pygame.mouse.get_pos()
+		
 			for ui in reversed(self.uiComponents):
-				if not self.hoveredUI:
-					if __is_mouse__over__(ui):
+				if self.hoveredUI:
+					if not self.__is_mouse_over__(mX, mY, self.hoveredUI):
+						self.hoveredUI.on_hover_end()
+						self.hoveredUI = None
+				else:
+					if self.__is_mouse_over__(mX, mY, ui):
 						self.hoveredUI = ui
-						print("hovered over ui")
 						ui.on_hover_begin()
 						break
 
@@ -87,8 +92,8 @@ class Program():
 					pygame.quit()
 					sys.exit(0)
 				elif event.type == pygame.MOUSEBUTTONDOWN:
-					mX = event.pos[0]
-					mY = event.pos[1]
+					#mX = event.pos[0]
+					#mY = event.pos[1]
 					
 					clickedUI = None
 					
