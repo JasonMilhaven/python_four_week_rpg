@@ -1,5 +1,5 @@
-import _thread
 #import time
+import threading
 import sys
 import os
 
@@ -53,7 +53,8 @@ class Program():
 		
 		# begin the main program
 		
-		self.drawThread = _thread.start_new_thread(self.draw_loop, ())
+		self.drawThread = threading.Thread(target=self.draw_loop)
+		self.drawThread.setDaemon(True)
 		self.event_loop()
 
 	def __is_mouse_over__(self, mX, mY, transform):
