@@ -20,7 +20,6 @@ class Program():
 		self.WIN_WIDTH = 1024
 		self.WIN_HEIGHT = 576
 		self.WIN_ICON_FILENAME = "\\Icon.png"
-		
 		self.FILL_COLOR = (0, 0, 0)
 		
 		# core variables
@@ -50,6 +49,8 @@ class Program():
 		u2 = UIComponent()
 		u2.set_pos(380, 380)
 		u2.set_size(100, 100)
+		self.color = GRAY
+		self.borderColor = WHITE
 		self.uiComponents.append(u2)
 		
 		# begin the main program
@@ -71,12 +72,12 @@ class Program():
 	def event_loop(self):
 		while self.isRunning:
 			
-			for ui in reversed(self.uiComponents):
+			"""for ui in reversed(self.uiComponents):
 				if !self.hoveredUI:
 					if __is_mouse__
 					self.hoveredUI = ui
 					ui.on_hover_begin()
-					break
+					break"""
 			
 			
 			

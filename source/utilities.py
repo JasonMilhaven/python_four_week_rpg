@@ -6,6 +6,7 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GRAY = (35, 34, 34)
 
 def load_img(name):
 	ret = None
