@@ -9,10 +9,10 @@ class UIComponent(Transform):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
 		self.__visible__ = False
-		self.color = RED
-		self.borderColor = BLUE
+		self.color = GRAY
+		self.borderColor = WHITE
+		
 		self.borderSize = 2
-		self.onClicked = None
 	
 	def get_visible(self):
 		return self.__visible__
@@ -21,5 +21,10 @@ class UIComponent(Transform):
 		self.__visible__ = v
 		
 	def on_clicked(self):
-		if self.onClicked:
-			self.onClicked()
+		pass
+		
+	def on_hover_begin(self):
+		pass
+	
+	def on_hover_end(self):
+		pass

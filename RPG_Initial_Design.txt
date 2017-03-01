@@ -54,7 +54,7 @@ __privateVariable__()
 roles----------------------------------------------------------------------------------------
 
 Benamin - Art, Monster subclass(es) behaviour
-Doug - Player, Misc
+Doug - Entity, Player, Misc
 Igor - Art, login page
 Jason - main Program, UI classes, Tiles, Entity
 
@@ -64,7 +64,23 @@ class design--------------------------------------------------------------------
 anything with a question mark will not be priortized
 
 Program
- design this class later
+ constructor()
+  WIN_TITLE = "test"
+  WIN_WID = 1000
+  WIN_HEIGHT = 500
+  ICON = "Icon.png"
+
+  isRunning = true
+  inGame = false
+  uiComponents = empty list
+  entities = empty list
+ 
+  self.pygameSurface = create pygame win with width and height constants
+  set window icon
+
+  load UI here, add to uiComponent list
+
+  create draw thread
 
 Transform
 
