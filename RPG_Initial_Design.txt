@@ -1,0 +1,147 @@
+RPG_Initial_Design.txt----------------------------------------------------------------------------------------
+
+Open world rpg game, after base classes are created, make grass tile/1 monster/player
+
+
+
+class diagram
+
+Program (not a class, global scope)
+UI
+ Frame
+ Text
+Thread
+Entity
+ Player
+ Monster
+  various monsters..
+Tile (game terrain)
+ BlockingTile
+  Mountain
+  SnowyMountain
+ WalkableTile
+  Grass
+  Snow
+
+if extra time:
+
+Buff
+
+
+class hierarchy and containers----------------------------------------------------------------------------------------
+
+Program
+ Player reference
+ Entity list
+ Tile list
+ Menu
+  LoginButton
+
+
+naming conventions----------------------------------------------------------------------------------------
+
+constants: A_CONSTANT
+variables: aVariable
+class: ClassName
+func/method: a_func_or_method()
+
+fields and methods (member vars and funcs) are public by default
+and are to be surrounded by underscores, 1 if protected 2 if private
+_protected_method_()
+__privateVariable__()
+
+
+roles----------------------------------------------------------------------------------------
+
+Benamin - Art, Monster subclass behaviour
+Doug - Player
+Igor - Art, login page
+Jason - main Program, UI classes, Tiles, Entity
+
+
+class design----------------------------------------------------------------------------------------
+
+anything with a question mark will not be priortized
+
+Program
+ design this class later
+
+UI
+ __visible__
+ int x, y position
+ int x, y size
+
+ make the __visible__ accessors incase they are needed later
+ get_visible() return __visible__
+ set_visible(v) __visible__ = v 
+
+ on_clicked() -called from main program
+ 
+
+Entity
+ all these are int values:
+ x, y position
+ maxHealth
+ health
+ damage
+ movespeed
+ range
+ strength?
+ dexterity?
+ intelligence?
+ __entityState__
+ 
+ walk animation
+ attack animation
+ die animation?
+
+ enum EntityState: -used for animations
+  WALKING
+  IDLING
+  ATTACKING
+ coroutine animate()
+  switch entityState
+ update() -called from program in main loop
+ attack()
+ die()
+ move(x, y)
+
+ constructor(int x = 0, y = 0)
+ destructor()
+ 
+
+Player derives from Entity
+ walk animation
+ attack animation
+ die animation?
+
+ override die()
+  respawn player
+
+ walk() and attack() -called from Program class given input
+ 
+
+Monster derives from Entity
+ int array offsets 
+ int sight
+
+ override update()
+  -move monster given offsets
+  attack() player if in sight
+
+
+TestMonster
+ walk animation
+ attack animation
+ die animation?
+
+ constructor()
+
+Tile
+ texture
+ x, y position
+ moveSpeed modifier
+ spawnableMonster list
+ 
+ on_collide() called when an entity enters tile
+
