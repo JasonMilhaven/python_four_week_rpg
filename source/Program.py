@@ -77,17 +77,13 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
-<<<<<<< HEAD
-			
+			mX, mY = pygame.mouse.get_pos()
 			"""for ui in reversed(self.uiComponents):
 				if !self.hoveredUI:
 					if __is_mouse__
 					self.hoveredUI = ui
 					ui.on_hover_begin()
 					break"""
-			
-=======
-			mX, mY = pygame.mouse.get_pos()
 		
 			for ui in reversed(self.uiComponents):
 				"""if self.hoveredUI:
@@ -107,17 +103,12 @@ class Program():
 						ui.on_hover_begin()
 				else:
 					pass
-					
->>>>>>> refs/remotes/origin/JasonMilhavensBranch
 			
 			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.close()
 				elif event.type == pygame.MOUSEBUTTONDOWN:
-					#mX = event.pos[0]
-					#mY = event.pos[1]
-					
 					clickedUI = None
 					
 					# REVERSE the ui click detection, very important
