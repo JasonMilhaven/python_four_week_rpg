@@ -11,8 +11,9 @@ class UIComponent(Transform):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
 		self.__visible__ = False
-		self.color = RED
-		self.borderColor = BLUE
+		self.color = GRAY
+		self.borderColor = WHITE
+		
 		self.borderSize = 2
 	
 	def get_visible(self):
