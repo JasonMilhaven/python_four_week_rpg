@@ -16,3 +16,19 @@ def load_img(name):
 	except Exception:
 		print("failed to load " + fullName)
 	return ret
+
+def load_sound(name):
+	pass
+
+def clampInputAxis(num):
+	ret = num
+
+	min = -1
+	max = 1
+
+	if num < min:
+		ret = min
+	elif num > max:
+		ret = max
+
+	return ret
