@@ -39,14 +39,14 @@ class Transform():
 	# multiple field accessors
 	
 	def get_pos(self):
-		return (get_pos_x(), get_pos_y())
+		return (self.get_pos_x(), self.get_pos_y())
 	
 	def set_pos(self, x, y):
 		self.set_pos_x(x)
 		self.set_pos_y(y)
 	
 	def get_size(self):
-		return (get_size_x(), get_size_y())
+		return (self.get_size_x(), self.get_size_y())
 	
 	def set_size(self, x, y):
 		self.set_size_x(x)

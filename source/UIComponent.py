@@ -23,6 +23,7 @@ class UIComponent(Transform):
 		self.__visible__ = v
 		
 	def on_clicked(self):
+		print(self.name + " clicked")
 		pass
 		
 	def on_hover_begin(self):

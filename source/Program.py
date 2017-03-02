@@ -6,17 +6,54 @@ import os
 import pygame
 
 from UIComponent import *
+from Input import *
 from utilities import *
 
+"""
+	******************************************************************************
+
+	Class: Program
+	
+	Description: A single instance class representing the program, with a window,
+	draw loop, and game loop to handle logic.
+	
+	Author: Jason Milhaven
+	
+	History: No longer using "Daemon" thread as draw loop,
+	draw loop should be terminated first, not last.
+	
+	******************************************************************************
+"""
+
 class Program():
+
+	"""
+		==============================================================================
+		
+		Method: __init__
+		
+		Description: Constructor for the Program class, creates the window given
+		a title, w and h constants, sets window icon.
+		
+		The game logic and event handling is in event_loop, on the main thread.
+		The drawing is handled exclusively in draw_loop, on a seperate thread.
+		
+		UI is created upon instantiation.
+		
+		Author: Jason Milhaven
+		
+		History:
+		
+		==============================================================================
+	"""
 
 	def __init__(self):
 		
 		# constants
-		self.WIN_TITLE = "RPG_Title"
+		self.WIN_TITLE = "Pythonica"
 		self.WIN_WIDTH = 1024
 		self.WIN_HEIGHT = 576
-		self.WIN_ICON_FILENAME = "\\Icon.png"
+		self.WIN_ICON_FILENAME = "Icon.png"
 		self.FILL_COLOR = (0, 0, 0)
 		
 		# core variables
@@ -24,6 +61,7 @@ class Program():
 		self.isInGame = False
 		self.uiComponents = []
 		self.hoveredUI = None
+		self.input = Input()
 		
 		# in game
 		self.player = None
@@ -38,12 +76,14 @@ class Program():
 		
 		# make the ui
 		u = UIComponent()
-		u.set_pos(400, 400)
+		u.name = "UI 1"
+		u.set_pos(380, 380)
 		u.set_size(100, 100)
 		self.uiComponents.append(u)
 		
 		u2 = UIComponent()
-		u2.set_pos(380, 380)
+		u2.name = "UI 2"
+		u2.set_pos(400, 400)
 		u2.set_size(100, 100)
 		self.color = GRAY
 		self.borderColor = WHITE
@@ -77,33 +117,20 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
-			mX, mY = pygame.mouse.get_pos()
-			"""for ui in reversed(self.uiComponents):
-				if !self.hoveredUI:
-					if __is_mouse__
-					self.hoveredUI = ui
-					ui.on_hover_begin()
-					break"""
+			print(self.input.get_pos_x(), self.input.get_pos_y())
 		
-			for ui in reversed(self.uiComponents):
-				"""if self.hoveredUI:
+			mX, mY = pygame.mouse.get_pos()
+		
+			for ui in self.uiComponents:
+				if self.hoveredUI:
 					if not self.__is_mouse_over__(mX, mY, self.hoveredUI):
 						self.hoveredUI.on_hover_end()
 						self.hoveredUI = None
+					break
 				else:
 					if self.__is_mouse_over__(mX, mY, ui):
 						self.hoveredUI = ui
 						ui.on_hover_begin()
-						break"""
-				if self.__is_mouse_over__(mX, mY, ui):
-					if self.hoveredUI == ui:
-						pass
-					else:
-						self.hoveredUI = ui
-						ui.on_hover_begin()
-				else:
-					pass
-			
 			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -115,14 +142,43 @@ class Program():
 					for ui in reversed(self.uiComponents):
 						if self.__is_mouse_over__(mX, mY, ui):
 							clickedUI = ui
+							ui.on_clicked()
 							break
 					
-					if clickedUI:
-						clickedUI.on_clicked()
+					#if clickedUI:
+					#	clickedUI.on_clicked()
 					
 					"""for entity in self.entities:
 						if self.__is_mouse_over__(mX, mY, ui):
 							print("mouse clicked an entity")"""
+							
+				elif event.type == pygame.KEYDOWN:
+				
+					rawKey = event.key
+					prettyKey = event.unicode
+					
+					if rawKey == pygame.K_w:
+						self.input.set_pos_y(1)
+					elif rawKey == pygame.K_a:
+						self.input.set_pos_x(-1)
+					elif rawKey == pygame.K_s:
+						self.input.set_pos_y(-1)
+					elif rawKey == pygame.K_d:
+						self.input.set_pos_x(1)
+					
+				elif event.type == pygame.KEYUP:
+				
+					rawKey = event.key
+					
+					if rawKey == pygame.K_w:
+						self.input.set_pos_y(0)
+					elif rawKey == pygame.K_a:
+						self.input.set_pos_x(0)
+					elif rawKey == pygame.K_s:
+						self.input.set_pos_y(0)
+					elif rawKey == pygame.K_d:
+						self.input.set_pos_x(0)
+						
 
 	def __draw_transform__(self, transform):
 		pygame.draw.rect(self.pygameSurface, transform.color, (
