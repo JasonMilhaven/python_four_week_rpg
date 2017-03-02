@@ -3,6 +3,8 @@ import pygame
 from Transform import *
 from utilities import *
 
+# extend from this class and override the methods
+
 class UIComponent(Transform):
 
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
@@ -24,7 +26,9 @@ class UIComponent(Transform):
 		pass
 		
 	def on_hover_begin(self):
+		print(self.name + " hover begin")
 		pass
 	
 	def on_hover_end(self):
+		print(self.name + " hover end")
 		pass

@@ -4,6 +4,7 @@ class Transform():
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
 		if type(self) == Transform:
 			raise TypeError("do not instantiate a Transform directly")
+		self.name = ""
 		self._posX_ = posX
 		self._posY_ = posY
 		self._sizeX_ = sizeX
