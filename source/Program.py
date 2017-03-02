@@ -41,7 +41,6 @@ class Program():
 		u = UIComponent()
 		u.set_pos(400, 400)
 		u.set_size(100, 100)
-		u.onClicked = test
 		self.uiComponents.append(u)
 		
 		u2 = UIComponent()
@@ -52,9 +51,19 @@ class Program():
 		# begin the main program
 		
 		self.drawThread = threading.Thread(target=self.draw_loop)
-		self.drawThread.setDaemon(True)
+		#self.drawThread.setDaemon(True)
+		# threads should be killed manually
 		self.drawThread.start()
 		self.event_loop()
+
+	def close(self):
+		self.isRunning = False
+		
+		# kill any threads here
+		self.drawThread.join()
+		
+		pygame.quit()
+		sys.exit(0)
 
 	def __is_mouse_over__(self, mX, mY, transform):
 		ret = False
@@ -66,12 +75,11 @@ class Program():
 		return ret
 	
 	def event_loop(self):
-		
 		while self.isRunning:
 			mX, mY = pygame.mouse.get_pos()
 		
 			for ui in reversed(self.uiComponents):
-				if self.hoveredUI:
+				"""if self.hoveredUI:
 					if not self.__is_mouse_over__(mX, mY, self.hoveredUI):
 						self.hoveredUI.on_hover_end()
 						self.hoveredUI = None
@@ -79,15 +87,21 @@ class Program():
 					if self.__is_mouse_over__(mX, mY, ui):
 						self.hoveredUI = ui
 						ui.on_hover_begin()
-						break
-
+						break"""
+				if self.__is_mouse_over__(mX, mY, ui):
+					if self.hoveredUI == ui:
+						pass
+					else:
+						self.hoveredUI = ui
+						ui.on_hover_begin()
+				else:
+					pass
+					
 			
 			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					self.isRunning = False
-					pygame.quit()
-					sys.exit(0)
+					self.close()
 				elif event.type == pygame.MOUSEBUTTONDOWN:
 					#mX = event.pos[0]
 					#mY = event.pos[1]
@@ -142,7 +156,6 @@ class Program():
 			ui.borderSize,
 			ui.get_size_y()
 		))
-		
 	
 	def draw_loop(self):
 		while self.isRunning:

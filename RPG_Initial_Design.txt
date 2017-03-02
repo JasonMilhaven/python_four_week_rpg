@@ -6,7 +6,8 @@ Open world rpg game, after base classes are created, make grass tile/1 monster/p
 
 class diagram
 
-Program (not a class, global scope)
+utilities (module)
+Program
 UI
  Frame
  Text
@@ -16,16 +17,15 @@ Entity
  Monster
   various monsters..
 Tile (game terrain)
- BlockingTile
   Mountain
   SnowyMountain
- WalkableTile
   Grass
   Snow
 
 if extra time:
 
-Buff
+Buff/Ability
+Weapon
 
 
 class hierarchy and containers----------------------------------------------------------------------------------------
@@ -39,6 +39,11 @@ Program
 
 
 naming conventions----------------------------------------------------------------------------------------
+
+import order is:
+python lib
+pygame lib
+any project lib
 
 constants: A_CONSTANT
 variables: aVariable
@@ -74,7 +79,6 @@ all members are assumed to be private
   ICON = "Icon.png"
 
   isRunning = true
-  inGame = false
   uiComponents = empty list
   entities = empty list
  
@@ -105,6 +109,24 @@ all members are assumed to be private
       loop through uiComponents
        if mouse_is_over ui
         call on_clicked
+     if event is keypress
+      if keypress is valid move direction
+       if player exists
+        if player is not dead
+         move the player given the direction
+
+     for each entity, call update
+
+  draw_loop() executed on "daemon" seperate thread
+   while isRunning
+    draw ui in reverse order
+    draw entities
+
+  on_game_state_changed(bool inGame)
+   if inGame
+    recreate main menu UI using Igor's menu subclasses
+   else
+    start a game using Igor UI functions
    
 
 Transform
@@ -135,6 +157,8 @@ UIComponent
  load an image upon instantiation
 
 Entity derives from Transform
+ moveX
+ moveY
  maxHealth
  health
  damage
@@ -148,6 +172,14 @@ Entity derives from Transform
  walk animation
  attack animation
  die animation?
+
+ set_move(x, y)
+  moveX = x
+  moveY = y
+
+ get_move
+  return moveX, moveY
+
 
  enum EntityState: -used for animations
   WALKING
@@ -165,6 +197,7 @@ Entity derives from Transform
  
 
 Player derives from Entity
+ walkDirection tuple updated from player input
  walk animation
  attack animation
  die animation?
@@ -190,11 +223,53 @@ TestMonster
   set attributes
 
 Tile derives from Transform
- texture
- x, y position
+ texture array
+ select random texture
  isBlocking
  moveSpeed modifier
  spawnableMonster list
  
- on_collide() called when an entity enters tile
+ on_collide(entity) called when an entity enters tile
+  if isBlocking
+   move entity back to original position as "collision"
+    
+
+if extra time:
+
+Ability
+ entity parent
+ 
+ void update()
+  allow subclass to have specific functionality
+
+Weapon
+ entity parent
+ bool selected
+ 
+ int damage
+ int range
+
+ void update()
+  do the damage, do NOT override unless needed
+
+utilities module
+
+load_image(string name)
+ try to load pygame image in try-catch
+ return image, else return empty array if fail
+
+load_sound(string name)
+ try to load pygame sound
+ return sound, else return NULL
+
+
+
+UI subclasses to be designed by Igor
+
+file saving/loading classes to be designed by Igor
+
+
+
+
+
 

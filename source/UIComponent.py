@@ -25,7 +25,9 @@ class UIComponent(Transform):
 		pass
 		
 	def on_hover_begin(self):
+		print(self.name + " hover begin")
 		pass
 	
 	def on_hover_end(self):
+		print(self.name + " hover end")
 		pass
