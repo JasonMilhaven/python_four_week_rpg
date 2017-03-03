@@ -117,7 +117,7 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
-			print(self.input.get_pos_x(), self.input.get_pos_y())
+			#print(self.input.get_pos_x(), self.input.get_pos_y())
 		
 			mX, mY = pygame.mouse.get_pos()
 		
