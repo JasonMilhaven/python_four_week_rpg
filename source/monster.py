@@ -1,13 +1,9 @@
 
+from Entity import *
 
-class Monsters(Entity):
+class Monster(Entity):
+
 	def __init__(self):
-		sight = 0
-		offsets = []
-	
-	def update(self):
-		 
-		 
-		 
-		 
-		 
+		offsets = [
+			
+		]

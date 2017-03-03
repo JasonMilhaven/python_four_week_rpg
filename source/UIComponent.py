@@ -10,7 +10,7 @@ class UIComponent(Transform):
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
-		self.__visible__ = False
+		self.__visible__ = True
 		self.color = GRAY
 		self.borderColor = WHITE
 		

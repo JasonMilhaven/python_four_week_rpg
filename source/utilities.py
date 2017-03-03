@@ -10,7 +10,8 @@ GRAY = (35, 34, 34)
 
 def load_img(name):
 	ret = None
-	fullName = os.getcwd() + "\\" + name
+	fullName = os.getcwd().rsplit("\\", 1)[0] + "\\resources\\" + name
+	
 	try:
 		ret = pygame.image.load(fullName)
 	except Exception:

@@ -9,6 +9,8 @@ class Transform():
 		self._posY_ = posY
 		self._sizeX_ = sizeX
 		self._sizeY_ = sizeY
+		
+		self.img = None
 	
 	# single field accessors
 	
@@ -51,4 +53,10 @@ class Transform():
 	def set_size(self, x, y):
 		self.set_size_x(x)
 		self.set_size_y(y)
+		
+	# methods
+	
+	def draw(self, screen):
+		if self.img:
+			screen.blit(self.img, self.get_pos())
 	
