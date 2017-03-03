@@ -1,6 +1,7 @@
 from enum import *
+
 from utilities import *
-from Drawable import *
+from Transform import *
 
 class EntityState(Enum):
 		IDLING = 0
