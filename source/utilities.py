@@ -12,7 +12,7 @@ def load_img(name):
 	ret = None
 	fullName = os.getcwd() + "\\" + name
 	try:
-		ret = pygame.image.load(fullName).convert()
+		ret = pygame.image.load(fullName)
 	except Exception:
 		print("failed to load " + fullName)
 	return ret
