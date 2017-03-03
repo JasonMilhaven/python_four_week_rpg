@@ -9,6 +9,8 @@ class Entity(Transform):
 		ATTACKING = 2
 
 	def __init__(self):
+		self.moveX = 0
+		self.moveY = 0
 		self.maxHealth = 0
 		self.health= self.maxHealth
 		self.damage = 0
@@ -20,6 +22,9 @@ class Entity(Transform):
 		self.__entityState__ = EntityState.IDLING
 		self.anims = []
         
+	def get_move():
+		return moveX, moveY
+	
 	def animate():
 		pass
 	
