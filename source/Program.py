@@ -66,6 +66,7 @@ class Program():
 		# in game
 		self.player = None
 		self.entities = []
+		self.tiles = []
 		
 		# pygame initialization
 		pygame.init()
@@ -106,7 +107,7 @@ class Program():
 		pygame.quit()
 		sys.exit(0)
 
-	def __is_mouse_over__(self, mX, mY, transform):
+	def __is_in__(self, mX, mY, transform):
 		ret = False
 		
 		xCondition = mX <= transform.get_pos_x() + transform.get_size_x() and mX > transform.get_pos_x()
@@ -114,6 +115,14 @@ class Program():
 		
 		ret = xCondition and yCondition
 		return ret
+	
+	"""def __in_tile__(self, x, y, tile):
+		ret = False
+		
+		xCondition = x <= tile.get_pos_x() + tile.get_size_x() and x > tile.get_pos_x()
+		xCondition = y <= tile.get_pos_y() + tile.get_size_y() and y > tile.get_pos_y()
+		
+		ret = xCondition"""
 	
 	def event_loop(self):
 		while self.isRunning:
@@ -123,12 +132,12 @@ class Program():
 		
 			for ui in self.uiComponents:
 				if self.hoveredUI:
-					if not self.__is_mouse_over__(mX, mY, self.hoveredUI):
+					if not self.__is_in__(mX, mY, self.hoveredUI):
 						self.hoveredUI.on_hover_end()
 						self.hoveredUI = None
 					break
 				else:
-					if self.__is_mouse_over__(mX, mY, ui):
+					if self.__is_in__(mX, mY, ui):
 						self.hoveredUI = ui
 						ui.on_hover_begin()
 			
@@ -140,7 +149,7 @@ class Program():
 					
 					# REVERSE the ui click detection, very important
 					for ui in reversed(self.uiComponents):
-						if self.__is_mouse_over__(mX, mY, ui):
+						if self.__is_in__(mX, mY, ui):
 							clickedUI = ui
 							ui.on_clicked()
 							break
@@ -149,7 +158,7 @@ class Program():
 					#	clickedUI.on_clicked()
 					
 					"""for entity in self.entities:
-						if self.__is_mouse_over__(mX, mY, ui):
+						if self.__is_in__(mX, mY, ui):
 							print("mouse clicked an entity")"""
 							
 				elif event.type == pygame.KEYDOWN:
@@ -178,7 +187,12 @@ class Program():
 						self.input.set_pos_y(0)
 					elif rawKey == pygame.K_d:
 						self.input.set_pos_x(0)
-						
+			
+			# ensure entities cannot walk into tiles
+			for entity in self.entities:
+				for tile in self.tiles:
+					if self.__is_in__(entity.get_move() + entity.get_pos):
+						entity.set_move(-entity.moveX, -entity.moveY)
 
 	def __draw_transform__(self, transform):
 		pygame.draw.rect(self.pygameSurface, transform.color, (
