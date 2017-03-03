@@ -1,12 +1,15 @@
 #import time
+import math
 import threading
 import sys
 import os
 
 import pygame
 
+from Entity import *
 from UIComponent import *
 from Input import *
+from Tile import *
 from utilities import *
 
 """
@@ -55,6 +58,7 @@ class Program():
 		self.WIN_HEIGHT = 576
 		self.WIN_ICON_FILENAME = "Icon.png"
 		self.FILL_COLOR = (0, 0, 0)
+		self.RENDER_DISTANCE = 1250
 		
 		# core variables
 		self.isRunning = True
@@ -64,7 +68,9 @@ class Program():
 		self.input = Input()
 		
 		# in game
-		self.player = None
+		#self.player = None
+		# THIS IS A PLACEHOLDER FIX THIS AFTER TESTING <---------------------------------------
+		self.player = Entity()
 		self.entities = []
 		self.tiles = []
 		
@@ -89,6 +95,14 @@ class Program():
 		self.color = GRAY
 		self.borderColor = WHITE
 		self.uiComponents.append(u2)
+		
+		# test game objects
+		
+		t = Tile()
+		t.set_pos(200, 200)
+		t.set_size(540, 700)
+		t.img = load_img("TestTile.png")
+		self.tiles.append(t)
 		
 		# begin the main program
 		
@@ -115,6 +129,14 @@ class Program():
 		
 		ret = xCondition and yCondition
 		return ret
+		
+	def __distance__(self, t1, t2):
+		x1 = t1.get_pos_x()
+		y1 = t1.get_pos_y()
+		x2 = t2.get_pos_x()
+		y2 = t2.get_pos_y()
+		dist = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+		return dist
 	
 	"""def __in_tile__(self, x, y, tile):
 		ret = False
@@ -126,20 +148,21 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
-			#print(self.input.get_pos_x(), self.input.get_pos_y())
+			print(self.input.get_pos_x(), self.input.get_pos_y())
 		
 			mX, mY = pygame.mouse.get_pos()
 		
 			for ui in self.uiComponents:
-				if self.hoveredUI:
-					if not self.__is_in__(mX, mY, self.hoveredUI):
-						self.hoveredUI.on_hover_end()
-						self.hoveredUI = None
-					break
-				else:
-					if self.__is_in__(mX, mY, ui):
-						self.hoveredUI = ui
-						ui.on_hover_begin()
+				if ui.get_visible():
+					if self.hoveredUI:
+						if not self.__is_in__(mX, mY, self.hoveredUI):
+							self.hoveredUI.on_hover_end()
+							self.hoveredUI = None
+						break
+					else:
+						if self.__is_in__(mX, mY, ui):
+							self.hoveredUI = ui
+							ui.on_hover_begin()
 			
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
@@ -149,10 +172,11 @@ class Program():
 					
 					# REVERSE the ui click detection, very important
 					for ui in reversed(self.uiComponents):
-						if self.__is_in__(mX, mY, ui):
-							clickedUI = ui
-							ui.on_clicked()
-							break
+						if ui.get_visible():
+							if self.__is_in__(mX, mY, ui):
+								clickedUI = ui
+								ui.on_clicked()
+								break
 					
 					#if clickedUI:
 					#	clickedUI.on_clicked()
@@ -193,6 +217,9 @@ class Program():
 				for tile in self.tiles:
 					if self.__is_in__(entity.get_move() + entity.get_pos):
 						entity.set_move(-entity.moveX, -entity.moveY)
+						
+			#self.player.update()
+			
 
 	def __draw_transform__(self, transform):
 		pygame.draw.rect(self.pygameSurface, transform.color, (
@@ -235,9 +262,16 @@ class Program():
 			self.pygameSurface.fill(self.FILL_COLOR)
 			
 			for ui in self.uiComponents:
-				self.__draw_ui__(ui)
+				if ui.get_visible():
+					self.__draw_ui__(ui)
+					ui.draw(self.pygameSurface);
 			
-			for entity in self.entities:
-				self.__draw_transform__(entity)
+			if self.player:
+				for tile in self.tiles:
+					if self.__distance__(self.player, tile) <= self.RENDER_DISTANCE:
+						tile.draw(self.pygameSurface)
+				for entity in self.entities:
+					if self.__distance__(self.player, entity) <= self.RENDER_DISTANCE:
+						entity.draw(self.pygameSurface)
 			
 			pygame.display.update()
