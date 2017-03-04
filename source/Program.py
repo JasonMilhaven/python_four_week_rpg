@@ -1,4 +1,4 @@
-#import time
+import time
 import math
 import threading
 import sys
@@ -7,6 +7,7 @@ import os
 import pygame
 
 from Entity import *
+from Player import *
 from UIComponent import *
 from Input import *
 from Tile import *
@@ -66,13 +67,16 @@ class Program():
 		self.uiComponents = []
 		self.hoveredUI = None
 		self.input = Input()
+		self.lastTime = time.time()
 		
 		# in game
-		#self.player = None
-		# THIS IS A PLACEHOLDER FIX THIS AFTER TESTING <---------------------------------------
-		self.player = Entity()
 		self.entities = []
 		self.tiles = []
+		
+		#self.player = None
+		# THIS IS A PLACEHOLDER FIX THIS AFTER TESTING <---------------------------------------
+		self.player = Player()
+		self.entities.append(self.player)
 		
 		# pygame initialization
 		pygame.init()
@@ -84,7 +88,7 @@ class Program():
 		# make the ui
 		u = UIComponent()
 		u.name = "UI 1"
-		u.set_pos(380, 380)
+		#u.set_pos(380, 380)
 		u.set_size(100, 100)
 		self.uiComponents.append(u)
 		
@@ -100,7 +104,6 @@ class Program():
 		
 		t = Tile()
 		t.set_pos(200, 200)
-		t.set_size(540, 700)
 		t.img = load_img("TestTile.png")
 		self.tiles.append(t)
 		
@@ -122,36 +125,58 @@ class Program():
 		sys.exit(0)
 
 	def __is_in__(self, mX, mY, transform):
+		
 		ret = False
 		
-		xCondition = mX <= transform.get_pos_x() + transform.get_size_x() and mX > transform.get_pos_x()
-		yCondition = mY <= transform.get_pos_y() + transform.get_size_y() and mY > transform.get_pos_y()
+		xCondition = mX <= transform.get_pos_x() + transform.get_size_x() * 0.5 and mX > transform.get_pos_x() - transform.get_size_x() * 0.5
+		yCondition = mY <= transform.get_pos_y() + transform.get_size_y() * 0.5 and mY > transform.get_pos_y() - transform.get_size_y() * 0.5
 		
 		ret = xCondition and yCondition
 		return ret
+		
+
+	def __colliding_x__(self, t1, t2):
+		ret = False
+		
+		len = abs(t1.get_size_x() * 0.5 + t2.get_size_x() * 0.5)
+		
+		if abs(t1.get_pos_x() - t2.get_pos_x()) < len:
+			ret = True
+		
+		return ret
+
+		
+	def __colliding_y__(self, t1, t2):
+		ret = False
+		
+		len = abs(t1.get_size_y() * 0.5 + t2.get_size_y() * 0.5)
+		
+		if abs(t1.get_pos_y() - t2.get_pos_y()) < len:
+			ret = True
+		
+		return ret
+		
 		
 	def __distance__(self, t1, t2):
 		x1 = t1.get_pos_x()
 		y1 = t1.get_pos_y()
 		x2 = t2.get_pos_x()
 		y2 = t2.get_pos_y()
-		dist = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+		dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 		return dist
-	
-	"""def __in_tile__(self, x, y, tile):
-		ret = False
 		
-		xCondition = x <= tile.get_pos_x() + tile.get_size_x() and x > tile.get_pos_x()
-		xCondition = y <= tile.get_pos_y() + tile.get_size_y() and y > tile.get_pos_y()
-		
-		ret = xCondition"""
 	
 	def event_loop(self):
 		while self.isRunning:
-			print(self.input.get_pos_x(), self.input.get_pos_y())
+			# print(self.input.get_pos_x(), self.input.get_pos_y())
 		
 			mX, mY = pygame.mouse.get_pos()
-		
+			
+			# get the time between frame
+			
+			frameDelta = time.time() - self.lastTime
+			self.lastTime = time.time()
+			
 			for ui in self.uiComponents:
 				if ui.get_visible():
 					if self.hoveredUI:
@@ -191,40 +216,50 @@ class Program():
 					prettyKey = event.unicode
 					
 					if rawKey == pygame.K_w:
-						self.input.set_pos_y(1)
+						self.input.set_pos_y(-2)
 					elif rawKey == pygame.K_a:
-						self.input.set_pos_x(-1)
+						self.input.set_pos_x(-2)
 					elif rawKey == pygame.K_s:
-						self.input.set_pos_y(-1)
+						self.input.set_pos_y(2)
 					elif rawKey == pygame.K_d:
-						self.input.set_pos_x(1)
+						self.input.set_pos_x(2)
+					
 					
 				elif event.type == pygame.KEYUP:
 				
 					rawKey = event.key
-					
+						
 					if rawKey == pygame.K_w:
-						self.input.set_pos_y(0)
+						self.input.set_pos_y(self.input.get_pos_y() + 1)
 					elif rawKey == pygame.K_a:
-						self.input.set_pos_x(0)
+						self.input.set_pos_x(self.input.get_pos_x() + 1)
 					elif rawKey == pygame.K_s:
-						self.input.set_pos_y(0)
+						self.input.set_pos_y(self.input.get_pos_y() - 1)
 					elif rawKey == pygame.K_d:
-						self.input.set_pos_x(0)
+						self.input.set_pos_x(self.input.get_pos_x() - 1)
+			
+			# set player move to input
+			if self.player:
+				self.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
+				
 			
 			# ensure entities cannot walk into tiles
 			for entity in self.entities:
 				for tile in self.tiles:
-					if self.__is_in__(entity.get_move() + entity.get_pos):
-						entity.set_move(-entity.moveX, -entity.moveY)
-						
-			#self.player.update()
-			
+					if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
+						if entity.get_move_x() == clamp01(tile.get_pos_x() - entity.get_pos_x()):
+							entity.set_move_x(0)
+						if entity.get_move_y() == clamp01(tile.get_pos_y() - entity.get_pos_y()):
+							entity.set_move_y(0)
+
+			entity.update(frameDelta)
+			entity.animate()
+
 
 	def __draw_transform__(self, transform):
 		pygame.draw.rect(self.pygameSurface, transform.color, (
-			transform.get_pos_x(),
-			transform.get_pos_y(),
+			transform.get_pos_x() - (transform.get_size_x() * 0.5),
+			transform.get_pos_y() - (transform.get_size_y() * 0.5),
 			transform.get_size_x(),
 			transform.get_size_y()
 		))
@@ -233,26 +268,26 @@ class Program():
 		self.__draw_transform__(ui)
 		
 		pygame.draw.rect(self.pygameSurface, ui.borderColor, (
-			ui.get_pos_x(),
-			ui.get_pos_y(),
+			ui.get_pos_x() - (ui.get_size_x() * 0.5),
+			ui.get_pos_y() - (ui.get_size_y() * 0.5),
 			ui.get_size_x(),
 			ui.borderSize
 		))
 		pygame.draw.rect(self.pygameSurface, ui.borderColor, (
-			ui.get_pos_x(),
-			ui.get_pos_y() + ui.get_size_y() - ui.borderSize,
+			ui.get_pos_x() - (ui.get_size_x() * 0.5),
+			ui.get_pos_y() - (ui.get_size_y() * 0.5) + ui.get_size_y() - ui.borderSize,
 			ui.get_size_x(),
 			ui.borderSize
 		))
 		pygame.draw.rect(self.pygameSurface, ui.borderColor, (
-			ui.get_pos_x(),
-			ui.get_pos_y(),
+			ui.get_pos_x() - (ui.get_size_x() * 0.5),
+			ui.get_pos_y() - (ui.get_size_y() * 0.5),
 			ui.borderSize,
 			ui.get_size_y()
 		))
 		pygame.draw.rect(self.pygameSurface, ui.borderColor, (
-			ui.get_pos_x() + ui.get_size_x() - ui.borderSize,
-			ui.get_pos_y(),
+			ui.get_pos_x() - (ui.get_size_x() * 0.5) + ui.get_size_x() - ui.borderSize,
+			ui.get_pos_y() - (ui.get_size_y() * 0.5),
 			ui.borderSize,
 			ui.get_size_y()
 		))
