@@ -1,3 +1,5 @@
+import time
+
 from enum import *
 
 from utilities import *
@@ -10,27 +12,79 @@ class EntityState(Enum):
 
 class Entity(Transform):
 
-	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
+	def __init__(self, posX = 0, posY = 0, sizeX = 32, sizeY = 32):
 		super().__init__(posX, posY, sizeX, sizeY)
-	
-		self.moveX = 0
-		self.moveY = 0
-		self.maxHealth = 0
-		self.health= self.maxHealth
+		
+		self.ANIM_WALK_DELAY = 0.2
+		
+		self.__moveX__ = 0
+		self.__moveY__ = 0
+		self.maxHealth = 100
+		self.__health__ = self.maxHealth
 		self.damage = 0
-		self.moveSpeed = 0
+		self.moveSpeed = 100
 		self.range = 0
+		
+		# likely to go unused
 		self.strength = 0
 		self.dexterity = 0
 		self.intellegence = 0
+		
 		self.__entityState__ = EntityState.IDLING
-		self.anims = []
-    
-	def get_move():
-		return moveX, moveY
+		self.anims = [
+			load_img("e1.png"),
+			load_img("e2.png"),
+			load_img("e3.png")
+		]
+		self.lastTime = time.time()
+
+	def get_move_x(self):
+		return self.__moveX__
 	
-	def animate():
-		pass
+	def set_move_x(self, v):
+		self.__moveX__ = v
+		Entity.check_moving(self)
+		#print(self.__entityState__)
 	
-	def update():
-		pass
+	def get_move_y(self):
+		return self.__moveY__
+	
+	def set_move_y(self, v):
+		self.__moveY__ = v
+		Entity.check_moving(self)
+	
+	def get_move(self):
+		return self.get_move_x(), self.get_move_y()
+	
+	def set_move(self, x, y):
+		self.set_move_x(x)
+		self.set_move_y(y)
+	
+	def get_health(self):
+		return self.__health__
+		
+	def set_health(self, v):
+		self.__health__ = v
+	
+	def check_moving(self):
+		if abs(self.get_move_x()) + abs(self.get_move_y()) == 0:
+			self.__entityState__ = EntityState.IDLING
+		else:
+			self.__entityState__ = EntityState.WALKING
+	
+	def animate(self):
+		if self.__entityState__ == EntityState.IDLING:
+			self.img = self.anims[0]
+		if self.__entityState__ == EntityState.WALKING:
+			timePassed = time.time() - self.lastTime
+			if timePassed >= self.ANIM_WALK_DELAY:
+				self.img = self.anims[1]
+				self.lastTime = time.time()
+		if self.__entityState__ == EntityState.ATTACKING:
+			self.img = self.anims[2]
+		
+	
+	def update(self, frameDelta):
+		newX = self.get_pos_x() + self.get_move_x() * frameDelta * self.moveSpeed
+		newY = self.get_pos_y() + self.get_move_y() * frameDelta * self.moveSpeed
+		self.set_pos(newX, newY)

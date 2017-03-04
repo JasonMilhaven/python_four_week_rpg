@@ -21,7 +21,7 @@ def load_img(name):
 def load_sound(name):
 	pass
 
-def clampInputAxis(num):
+def clamp01(num):
 	ret = num
 
 	min = -1
