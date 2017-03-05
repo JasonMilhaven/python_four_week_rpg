@@ -13,15 +13,14 @@ class UIComponent(Transform):
 		self.__visible__ = True
 		self.color = GRAY
 		self.borderColor = WHITE
-		
 		self.borderSize = 2
-	
+		
 	def get_visible(self):
 		return self.__visible__
 	
 	def set_visible(self, v):
 		self.__visible__ = v
-		
+	
 	def on_clicked(self):
 		print(self.name + " clicked")
 		pass

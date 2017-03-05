@@ -56,6 +56,6 @@ class Transform():
 		
 	# methods
 	
-	def draw(self, screen):
+	def draw(self, screen, xOff = 0, yOff = 0):
 		if self.img:
-			screen.blit(self.img, (self.get_pos_x() - self.get_size_x() * 0.5, self.get_pos_y() - self.get_size_y() * 0.5))
+			screen.blit(self.img, (self.get_pos_x() - self.get_size_x() * 0.5 + xOff, self.get_pos_y() - self.get_size_y() * 0.5 + yOff))

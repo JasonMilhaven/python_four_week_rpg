@@ -9,6 +9,7 @@ import pygame
 from Entity import *
 from Player import *
 from UIComponent import *
+from UITextComponent import *
 from Input import *
 from Tile import *
 from utilities import *
@@ -59,7 +60,7 @@ class Program():
 		self.WIN_HEIGHT = 576
 		self.WIN_ICON_FILENAME = "Icon.png"
 		self.FILL_COLOR = (0, 0, 0)
-		self.RENDER_DISTANCE = 1250
+		self.RENDER_DISTANCE = 1440
 		
 		# core variables
 		self.isRunning = True
@@ -86,26 +87,32 @@ class Program():
 		pygame.display.set_icon(load_img(self.WIN_ICON_FILENAME))
 		
 		# make the ui
-		u = UIComponent()
+		u = UITextComponent(380, 200, 100, 100)
+		u.set_visible(False)
 		u.name = "UI 1"
-		#u.set_pos(380, 380)
-		u.set_size(100, 100)
+		u.text = "test"
+		u.borderSize = 1
 		self.uiComponents.append(u)
 		
-		u2 = UIComponent()
+		u2 = UIComponent(400, 400, 100, 100)
+		u2.set_visible(False)
 		u2.name = "UI 2"
-		u2.set_pos(400, 400)
-		u2.set_size(100, 100)
-		self.color = GRAY
-		self.borderColor = WHITE
 		self.uiComponents.append(u2)
+		
+		b = UIComponent(400, 100, 300, 100)
+		b.set_visible(False)
+		b.name = "Banner"
+		b.img = load_img("TestBanner.png")
+		self.uiComponents.append(b)
 		
 		# test game objects
 		
-		t = Tile()
-		t.set_pos(200, 200)
+		t = Tile(200, 200)
+		t.isBlocking = True
 		t.img = load_img("TestTile.png")
 		self.tiles.append(t)
+		
+		self.create_initial_tiles()
 		
 		# begin the main program
 		
@@ -123,6 +130,19 @@ class Program():
 		
 		pygame.quit()
 		sys.exit(0)
+		
+	
+	def create_initial_tiles(self):
+		
+		a = int(self.WIN_WIDTH / TILE_SCALE)
+		b = int(self.WIN_HEIGHT / TILE_SCALE)
+		
+		for x in range(-20, 20):
+			for y in range(-20, 20):
+				t = Tile(x * TILE_SCALE, y * TILE_SCALE)
+				t.img = load_img("TestTile.png")
+				self.tiles.append(t)
+
 
 	def __is_in__(self, mX, mY, transform):
 		
@@ -168,6 +188,7 @@ class Program():
 	
 	def event_loop(self):
 		while self.isRunning:
+			print("make a framerate cap for both loops")
 			# print(self.input.get_pos_x(), self.input.get_pos_y())
 		
 			mX, mY = pygame.mouse.get_pos()
@@ -216,13 +237,13 @@ class Program():
 					prettyKey = event.unicode
 					
 					if rawKey == pygame.K_w:
-						self.input.set_pos_y(-2)
+						self.input.set_pos_y(-1)
 					elif rawKey == pygame.K_a:
-						self.input.set_pos_x(-2)
+						self.input.set_pos_x(-1)
 					elif rawKey == pygame.K_s:
-						self.input.set_pos_y(2)
+						self.input.set_pos_y(1)
 					elif rawKey == pygame.K_d:
-						self.input.set_pos_x(2)
+						self.input.set_pos_x(1)
 					
 					
 				elif event.type == pygame.KEYUP:
@@ -246,26 +267,23 @@ class Program():
 			# ensure entities cannot walk into tiles
 			for entity in self.entities:
 				for tile in self.tiles:
-					if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-						if entity.get_move_x() == clamp01(tile.get_pos_x() - entity.get_pos_x()):
-							entity.set_move_x(0)
-						if entity.get_move_y() == clamp01(tile.get_pos_y() - entity.get_pos_y()):
-							entity.set_move_y(0)
+					if tile.isBlocking:
+						if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
+							if entity.get_move_x() == clamp01(tile.get_pos_x() - entity.get_pos_x()):
+								entity.set_move_x(0)
+							if entity.get_move_y() == clamp01(tile.get_pos_y() - entity.get_pos_y()):
+								entity.set_move_y(0)
 
 			entity.update(frameDelta)
 			entity.animate()
-
-
-	def __draw_transform__(self, transform):
-		pygame.draw.rect(self.pygameSurface, transform.color, (
-			transform.get_pos_x() - (transform.get_size_x() * 0.5),
-			transform.get_pos_y() - (transform.get_size_y() * 0.5),
-			transform.get_size_x(),
-			transform.get_size_y()
-		))
 	
 	def __draw_ui__(self, ui):
-		self.__draw_transform__(ui)
+		pygame.draw.rect(self.pygameSurface, ui.color, (
+			ui.get_pos_x() - (ui.get_size_x() * 0.5),
+			ui.get_pos_y() - (ui.get_size_y() * 0.5),
+			ui.get_size_x(),
+			ui.get_size_y()
+		))
 		
 		pygame.draw.rect(self.pygameSurface, ui.borderColor, (
 			ui.get_pos_x() - (ui.get_size_x() * 0.5),
@@ -292,21 +310,40 @@ class Program():
 			ui.get_size_y()
 		))
 	
+	# use offset getters because the draw thread
+	# is sometimes too fast if you store the result in a variable
+	
+	def get_x_off(self):
+		return self.WIN_WIDTH * 0.5 - self.player.get_pos_x()
+	
+	
+	def get_y_off(self):
+		return self.WIN_HEIGHT * 0.5 - self.player.get_pos_y()
+		
+	
 	def draw_loop(self):
 		while self.isRunning:
-			self.pygameSurface.fill(self.FILL_COLOR)
+			self.pygameSurface.fill(self.FILL_COLOR)			
 			
+			if self.player:
+				xOff = self.get_x_off()
+				yOff = self.get_y_off()
+				
+				for tile in self.tiles:
+					if self.__distance__(self.player, tile) <= self.RENDER_DISTANCE:
+						tile.draw(self.pygameSurface, self.get_x_off(), self.get_y_off())
+				for entity in self.entities:
+					if self.__distance__(self.player, entity) <= self.RENDER_DISTANCE:
+						if entity == self.player:
+							#entity.draw(self.pygameSurface, self.WIN_WIDTH * 0.5 - self.player.get_pos_x(), self.WIN_HEIGHT * 0.5 - self.player.get_pos_y())
+							#entity.draw(self.pygameSurface, xOff, yOff)
+							entity.draw(self.pygameSurface, self.get_x_off(), self.get_y_off())
+						else:
+							entity.draw(self.pygameSurface, self.get_x_off(), self.get_y_off())
+				
 			for ui in self.uiComponents:
 				if ui.get_visible():
 					self.__draw_ui__(ui)
 					ui.draw(self.pygameSurface);
-			
-			if self.player:
-				for tile in self.tiles:
-					if self.__distance__(self.player, tile) <= self.RENDER_DISTANCE:
-						tile.draw(self.pygameSurface)
-				for entity in self.entities:
-					if self.__distance__(self.player, entity) <= self.RENDER_DISTANCE:
-						entity.draw(self.pygameSurface)
 			
 			pygame.display.update()

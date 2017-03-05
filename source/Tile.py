@@ -8,7 +8,8 @@ class Tile(Transform):
 	
 	def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE, sizeY = TILE_SCALE):
 		super().__init__(posX, posY, sizeX, sizeY)
-				
+		
+		self.isBlocking = False
 		self.img = None
 	
 	

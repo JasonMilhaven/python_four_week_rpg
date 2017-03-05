@@ -85,6 +85,10 @@ class Entity(Transform):
 		
 	
 	def update(self, frameDelta):
-		newX = self.get_pos_x() + self.get_move_x() * frameDelta * self.moveSpeed
-		newY = self.get_pos_y() + self.get_move_y() * frameDelta * self.moveSpeed
+		#newX = self.get_pos_x() + self.get_move_x() * frameDelta * self.moveSpeed
+		#newY = self.get_pos_y() + self.get_move_y() * frameDelta * self.moveSpeed
+		newX = self.get_pos_x() + self.get_move_x() * self.moveSpeed
+		newY = self.get_pos_y() + self.get_move_y() * self.moveSpeed
 		self.set_pos(newX, newY)
+		print(self.get_pos())
+
