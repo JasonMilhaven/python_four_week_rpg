@@ -1,0 +1,28 @@
+after initial testing, the game cannot draw tiles on the screen and run
+at a playable framerate, even using Igor's method of int values for entity
+position, the game drawing runs at 30 fps, and the logic runs at 15, allowing
+the game to run any faster will result in massive screen tearing
+
+the game will now use instances of a Room class to represent where the player is,
+they will be part of the save files
+
+
+class Game
+ Player player
+ get rid of the Program's reference to player
+ list of rooms rooms
+ 
+ constructor()
+   rooms.append(new Room())
+   player = new Player()
+
+class Room
+ two-dimensional array of Tiles tiles
+ array of Rooms rooms[4]
+ list of Entities entities
+ 
+ constructor(win_width, win_height)
+  for a in win_width / TILE_SCALE
+   for b in win_height / TILE_SCALE
+    tiles.append(new Tile(a, b))
+    

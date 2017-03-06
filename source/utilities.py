@@ -9,7 +9,7 @@ WHITE = (255, 255, 255)
 GRAY = (35, 34, 34, 0.5)
 
 def get_res():
-	return os.getcwd().rsplit("\\", 1)[0] + "\\resources\\"
+	return os.getcwd().rsplit("\\", 1)[0] + "\\Python_Four_Week_Rpg\\resources\\"
 
 def load_img(name):
 	ret = None
@@ -25,10 +25,10 @@ def load_sound(name):
 	ret = None
 	fullName = get_res() + name
 	
-	#try:
-	ret = pygame.mixer.Sound(fullName)
-	#except Exception:
-	#print("failed to load sound " + fullName)
+	try:
+		ret = pygame.mixer.Sound(fullName)
+	except Exception:
+		print("failed to load sound " + fullName)
 	return ret
 
 def load_font(name, size):

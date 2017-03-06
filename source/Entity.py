@@ -4,6 +4,7 @@ from enum import *
 
 from utilities import *
 from Transform import *
+from Tile import *
 
 class EntityState(Enum):
 		IDLING = 0
@@ -12,7 +13,7 @@ class EntityState(Enum):
 
 class Entity(Transform):
 
-	def __init__(self, posX = 0, posY = 0, sizeX = 32, sizeY = 32):
+	def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE, sizeY = TILE_SCALE):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
 		self.ANIM_WALK_DELAY = 0.2
@@ -23,7 +24,7 @@ class Entity(Transform):
 		self.__health__ = self.maxHealth
 		self.damage = 0
 		self.moveSpeed = 100
-		self.range = 0
+		self.range = 2
 		
 		# likely to go unused
 		self.strength = 0
@@ -85,10 +86,11 @@ class Entity(Transform):
 		
 	
 	def update(self, frameDelta):
-		#newX = self.get_pos_x() + self.get_move_x() * frameDelta * self.moveSpeed
-		#newY = self.get_pos_y() + self.get_move_y() * frameDelta * self.moveSpeed
-		newX = self.get_pos_x() + self.get_move_x() * self.moveSpeed
-		newY = self.get_pos_y() + self.get_move_y() * self.moveSpeed
+		newX = self.get_pos_x() + self.get_move_x() * self.moveSpeed * frameDelta
+		newY = self.get_pos_y() + self.get_move_y() * self.moveSpeed * frameDelta
 		self.set_pos(newX, newY)
-		print(self.get_pos())
-
+	
+	
+	def attack(self, enemy):
+		self.__entityState__ = EntityState.ATTACKING
+		enemy.set_health(enemy.get_health() - self.damage)
