@@ -277,9 +277,6 @@ class Program():
 			ui.get_size_y()
 		))
 	
-	# use offset getters because the draw thread
-	# is sometimes too fast if you store the result in a variable
-	
 	def draw_loop(self):
 		while self.isRunning:
 			frameDelta = time.time() - self.lastDrawTime
@@ -291,16 +288,8 @@ class Program():
 				for tile in self.activeGame.currentRoom.tiles:
 					tile.draw(self.pySurface)
 				for entity in self.activeGame.currentRoom.entities:
-					if entity == self.activeGame.player:
-							#entity.draw(self.pySurface, self.WIN_WIDTH * 0.5 - self.player.get_pos_x(), self.WIN_HEIGHT * 0.5 - self.player.get_pos_y())
-							#entity.draw(self.pySurface, xOff, yOff)
-						entity.draw(self.pySurface)
-					else:
-						entity.draw(self.pySurface)
-				
-				for entity in self.activeGame.currentRoom.entities:
+					entity.draw(self.pySurface)
 					entity.animate()
-				
 				
 			for ui in self.uiComponents:
 				if ui.get_visible():
