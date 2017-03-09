@@ -20,8 +20,8 @@ from Game import *
 
 	Class: Program
 	
-	Description: A single instance (but not Singleton) class representing the program,
-	with a window, draw loop, and game loop to handle logic.
+	Description: A single instance class representing the program, with a window,
+	draw loop, and game loop to handle logic.
 	
 	Author: Jason Milhaven
 	
@@ -57,10 +57,8 @@ class Program():
 		
 		# constants
 		self.WIN_TITLE = "Pythonica"
-		#self.WIN_WIDTH = 1024
-		#self.WIN_HEIGHT = 576
-		self.WIN_WIDTH = 1366
-		self.WIN_HEIGHT = 768
+		self.WIN_WIDTH = 1024
+		self.WIN_HEIGHT = 576
 		self.WIN_ICON_FILENAME = "Icon.png"
 		self.FILL_COLOR = (0, 0, 0)
 		
@@ -116,7 +114,6 @@ class Program():
 		self.drawThread.start()
 		self.event_loop()
 
-		
 	def close(self):
 		self.isRunning = False
 		
@@ -239,20 +236,10 @@ class Program():
 					for tile in self.activeGame.currentRoom.tiles:
 						if tile.isBlocking:
 							if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-								
-								xDir = clamp01(tile.get_pos_x() - entity.get_pos_x())
-								yDir = clamp01(tile.get_pos_y() - entity.get_pos_y())
-								
-								if entity.get_move_x() == xDir:
-									entity.set_move_x(0)
-									#entity.set_move_x(-entity.get_move_x())
-								if entity.get_move_y() == yDir:
-									entity.set_move_y(0)
-									#entity.set_move_y(-entity.get_move_y())
-							"""if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
 								if entity.get_move_x() == clamp01(tile.get_pos_x() - entity.get_pos_x()):
-									entity.set_move_x(0)"""
-								
+									entity.set_move_x(0)
+								if entity.get_move_y() == clamp01(tile.get_pos_y() - entity.get_pos_y()):
+									entity.set_move_y(0)
 
 					entity.update(frameDelta)
 					

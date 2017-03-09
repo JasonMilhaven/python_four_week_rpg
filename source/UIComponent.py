@@ -35,10 +35,10 @@ class UIComponent(Transform):
 			self.on_clicked_func()
 		
 	def on_hover_begin(self):
-		if self.on_hover_begin_func:
-			self.on_hover_begin_func()
+		if self.on_hover_begin_func_func:
+			self.on_hover_begin_func_func()
 		
 	def on_hover_end(self):
-		if self.on_hover_end_func:
-			self.on_hover_end_func()
+		if self.on_hover_end_func_func:
+			self.on_hover_end_func_func()
 

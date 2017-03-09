@@ -2,49 +2,15 @@ import time
 
 from enum import *
 
+from utilities import *
 from Transform import *
 from Tile import *
-
-"""
-	******************************************************************************
-
-	Enum: EntityState
-	
-	Description: Not technically a Class, but an Enumeration.  Contains static members
-	as ints which represent the "state" of an entity: idling, walking, or attacking.
-	Animations will be played base on the entity's state, if there is time.
-	
-	Author: Jason Milhaven
-	
-	History: 
-	
-	******************************************************************************
-"""
 
 class EntityState(Enum):
 		IDLING = 0
 		WALKING = 1
 		ATTACKING = 2
 
-
-"""
-	******************************************************************************
-
-	Class: Entity
-	
-	Description: Has the characteristics of a live object in the game, will move
-	around, attack, has damage and health, and the potential to die.  Will
-	be subclassed by Player and Monster, as well as various specific Monsters.
-	Animations should be loaded in the base class constructor, as well as any
-	unique values for health/dmg.
-	
-	Author: Jason Milhaven
-	
-	History: 
-	
-	******************************************************************************
-"""
-		
 class Entity(Transform):
 
 	def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE, sizeY = TILE_SCALE):
@@ -57,7 +23,7 @@ class Entity(Transform):
 		self.maxHealth = 100
 		self.__health__ = self.maxHealth
 		self.damage = 0
-		self.moveSpeed = 500
+		self.moveSpeed = 100
 		self.range = 2
 		
 		# likely to go unused
@@ -78,14 +44,15 @@ class Entity(Transform):
 	
 	def set_move_x(self, v):
 		self.__moveX__ = v
-		Entity.__check_moving__(self)
+		Entity.check_moving(self)
+		#print(self.__entityState__)
 	
 	def get_move_y(self):
 		return self.__moveY__
 	
 	def set_move_y(self, v):
 		self.__moveY__ = v
-		Entity.__check_moving__(self)
+		Entity.check_moving(self)
 	
 	def get_move(self):
 		return self.get_move_x(), self.get_move_y()
@@ -100,7 +67,7 @@ class Entity(Transform):
 	def set_health(self, v):
 		self.__health__ = v
 	
-	def __check_moving__(self):
+	def check_moving(self):
 		if abs(self.get_move_x()) + abs(self.get_move_y()) == 0:
 			self.__entityState__ = EntityState.IDLING
 		else:

@@ -1,5 +1,5 @@
-
 import os
+
 import pygame
 
 BLUE = (0, 0, 255)
@@ -8,26 +8,8 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (35, 34, 34, 0.5)
 
-"""
-	******************************************************************************
-
-	Module: utilities
-	
-	Description: Contains "utility" functions which are part of the program, but
-	do not fit anywhere.  Contains color constants for UI, which may be moved later.
-	
-	Author: Jason Milhaven
-	
-	History: 
-	
-	******************************************************************************
-"""
-
-def get_dir():
-	return os.getcwd().rsplit("\\", 1)[0] + "\\Python_Four_Week_Rpg\\"
-
 def get_res():
-	return get_dir() + "resources\\"
+	return os.getcwd().rsplit("\\", 1)[0] + "\\Python_Four_Week_Rpg\\resources\\"
 
 def load_img(name):
 	ret = None
