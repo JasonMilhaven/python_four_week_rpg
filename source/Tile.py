@@ -1,5 +1,4 @@
 
-
 from Transform import *
 
 TILE_SCALE = 32
@@ -10,7 +9,7 @@ class Tile(Transform):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
 		self.isBlocking = False
-		self.img = None
+		self.img = load_img("Grass.png")
 	
 	
 	def set_size_x(self, x):

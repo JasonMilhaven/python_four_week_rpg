@@ -1,4 +1,6 @@
 
+from utilities import *
+
 class Transform():
 
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
