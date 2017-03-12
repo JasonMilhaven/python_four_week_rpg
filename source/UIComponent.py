@@ -3,10 +3,37 @@ import pygame
 from Transform import *
 from utilities import *
 
-# extend from this class and override the methods
-# or set the callback functions upon instantiation, either works ok
+"""
+	******************************************************************************
+
+	Class: UIComponent
+	
+	Description: Extend from this class and override the methods
+	or set the callback functions upon instantiation, either works ok.
+	
+	Author: Jason Milhaven
+	
+	History:
+	
+	******************************************************************************
+"""
 
 class UIComponent(Transform):
+
+	"""
+		==============================================================================
+		
+		Method: __init__
+		
+		Description: Constructor for UIComponent class, calls superclass constructor.
+		Provides fields to be modified, and events which can be set to functions.
+		
+		Author: Jason Milhaven
+		
+		History:
+		
+		==============================================================================
+	"""
 
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
 		super().__init__(posX, posY, sizeX, sizeY)

@@ -32,7 +32,9 @@ class EntityState(Enum):
 
 	Class: Entity
 	
-	Description: Has the characteristics of a live object in the game, will move
+	Description: Doug you can update the desc here.
+	
+	Has the characteristics of a live object in the game, will move
 	around, attack, has damage and health, and the potential to die.  Will
 	be subclassed by Player and Monster, as well as various specific Monsters.
 	Animations should be loaded in the base class constructor, as well as any

@@ -4,7 +4,37 @@ import random
 from Tile import *
 from utilities import *
 
+"""
+	******************************************************************************
+
+	Class: Room
+	
+	Description: Container for tiles, entities, and borderingRooms.  Represents a place
+	that the player will walk around.  Will get serialized alongside the Game instances.
+	
+	Author: Jason Milhaven
+	
+	History:
+	
+	******************************************************************************
+"""
+
 class Room():
+
+	"""
+		==============================================================================
+		
+		Method: __init__
+		
+		Description: Constructor for Room class, creates fields for rooms, tiles, and
+		entities.  Creates a room.
+		
+		Author: Jason Milhaven
+		
+		History:
+		
+		==============================================================================
+	"""
 
 	def __init__(self, width, height, player):
 		self.tiles = []

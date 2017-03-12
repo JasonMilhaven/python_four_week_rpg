@@ -2,6 +2,19 @@
 
 from Entity import *
 
+"""
+	******************************************************************************
+
+	Class: Player
+	
+	Description: Represents the player Entity in a game.
+	
+	Author: Jason Milhaven
+	
+	History:
+	
+	******************************************************************************
+"""
 
 class Player(Entity):
 

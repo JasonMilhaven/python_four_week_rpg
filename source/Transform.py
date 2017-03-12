@@ -1,7 +1,36 @@
 
 from utilities import *
 
+"""
+	******************************************************************************
+
+	Class: Transform
+	
+	Description: Represents a two-dimensional container for any object in the game.
+	
+	Author: Jason Milhaven
+	
+	History:
+	
+	******************************************************************************
+"""
+
 class Transform():
+
+	"""
+		==============================================================================
+		
+		Method: __init__
+		
+		Description: Constructor for Transform, prevents direct base class
+		instantiation.
+		
+		Author: Jason Milhaven
+		
+		History:
+		
+		==============================================================================
+	"""
 
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
 		if type(self) == Transform:

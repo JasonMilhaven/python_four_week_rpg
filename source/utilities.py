@@ -23,12 +23,55 @@ GRAY = (35, 34, 34, 0.5)
 	******************************************************************************
 """
 
+"""
+	==============================================================================
+	
+	Method: get_dir
+
+	Description: Returns the current directory.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+
 def get_dir():
 	return os.getcwd().rsplit("\\", 1)[0] + "\\Python_Four_Week_Rpg\\"
 
+"""
+	==============================================================================
+	
+	Method: get_res
+
+	Description: Returns the resources folder.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+	
 def get_res():
 	return get_dir() + "resources\\"
 
+"""
+	==============================================================================
+	
+	Method: load_img
+
+	Description: Attempts to load an image in the resources folder, prints an error
+	msg upon failure.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+	
 def load_img(name):
 	ret = None
 	fullName = get_res() + name
@@ -39,6 +82,21 @@ def load_img(name):
 		print("failed to load image " + fullName)
 	return ret
 
+"""
+	==============================================================================
+	
+	Method: load_sound
+
+	Description: Attempts to load an sound in the resources folder, prints an error
+	msg upon failure.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+	
 def load_sound(name):
 	ret = None
 	fullName = get_res() + name
@@ -49,6 +107,21 @@ def load_sound(name):
 		print("failed to load sound " + fullName)
 	return ret
 
+"""
+	==============================================================================
+	
+	Method: load_font
+
+	Description: Attempts to load a font in the resources folder, prints an error
+	msg upon failure.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+	
 def load_font(name, size):
 	ret = None
 	fullName = get_res() + name
@@ -58,7 +131,23 @@ def load_font(name, size):
 	except Exception:
 		print("failed to load font " + fullName)
 	return ret
+
+"""
+	==============================================================================
+	
+	Method: clamp01
+
+	Description: "Clamps" any number between 0 and 1.  If 256 is passed through,
+	1 is returned.  If -88 is passed through, -1 is returned.  If the argument
+	is within 1 to -1, the value returned will not be changed.  Passing 0.745
+	will still return 0.745.
 		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""	
 	
 def clamp01(num):
 	ret = num
