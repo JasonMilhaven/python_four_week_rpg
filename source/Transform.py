@@ -1,5 +1,36 @@
 
+from utilities import *
+
+"""
+	******************************************************************************
+
+	Class: Transform
+	
+	Description: Represents a two-dimensional container for any object in the game.
+	
+	Author: Jason Milhaven
+	
+	History:
+	
+	******************************************************************************
+"""
+
 class Transform():
+
+	"""
+		==============================================================================
+		
+		Method: __init__
+		
+		Description: Constructor for Transform, prevents direct base class
+		instantiation.
+		
+		Author: Jason Milhaven
+		
+		History:
+		
+		==============================================================================
+	"""
 
 	def __init__(self, posX = 0, posY = 0, sizeX = 0, sizeY = 0):
 		if type(self) == Transform:
@@ -58,5 +89,4 @@ class Transform():
 	
 	def draw(self, screen):
 		if self.img:
-			screen.blit(self.img, self.get_pos())
-	
+			screen.blit(self.img.convert_alpha(), (self.get_pos_x() - self.get_size_x() * 0.5, self.get_pos_y() - self.get_size_y() * 0.5))

@@ -28,10 +28,10 @@ class Input(Transform):
 		super().__init__()
 
 	def set_pos_x(self, v):
-		self._posX_ = clampInputAxis(v)
+		self._posX_ = clamp01(v)
 		
 	def set_pos_y(self, v):
-		self._posY_ = clampInputAxis(v)
+		self._posY_ = clamp01(v)
 		
 
 	# no reason to increase size of instance
