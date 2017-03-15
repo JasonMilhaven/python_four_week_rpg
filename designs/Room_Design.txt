@@ -1,3 +1,9 @@
+
+Design Number: 2
+Author(s): Jason
+
+
+
 after initial testing, the game cannot draw tiles on the screen and run
 at a playable framerate, even using Igor's method of int values for entity
 position, the game drawing runs at 30 fps, and the logic runs at 15, allowing

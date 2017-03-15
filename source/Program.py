@@ -108,6 +108,15 @@ class Program():
 		b.img = load_img("TestBanner.png")
 		self.uiComponents.append(b)
 		
+		# testing collision
+		
+		print("Ctrl+F to here to fix the rooms")
+		del self.activeGame.currentRoom.tiles[:] # delete each element in the list
+		t = Tile(TILE_SCALE * 4, TILE_SCALE * 4)
+		t.img = load_img("GrassMts.png")
+		t.isBlocking = True
+		self.activeGame.currentRoom.tiles.append(t)
+		
 		# begin the main program
 		
 		self.drawThread = threading.Thread(target=self.draw_loop)
@@ -139,6 +148,7 @@ class Program():
 		
 
 	def __colliding_x__(self, t1, t2):
+	
 		ret = False
 		
 		len = abs(t1.get_size_x() * 0.5 + t2.get_size_x() * 0.5)
@@ -238,20 +248,31 @@ class Program():
 				for entity in self.activeGame.currentRoom.entities:
 					for tile in self.activeGame.currentRoom.tiles:
 						if tile.isBlocking:
+						
+							a = tile.get_pos_x() - entity.get_pos_x()
+							b = tile.get_pos_y() - entity.get_pos_y()
+							
+							xDir = clamp01(a)
+							yDir = clamp01(b)
+							
+							#print(entity.get_pos())
+						
 							if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-								
-								xDir = clamp01(tile.get_pos_x() - entity.get_pos_x())
-								yDir = clamp01(tile.get_pos_y() - entity.get_pos_y())
-								
-								if entity.get_move_x() == xDir:
+								if entity.get_move_x() == xDir and (b > a or a > b):
 									entity.set_move_x(0)
-									#entity.set_move_x(-entity.get_move_x())
-								if entity.get_move_y() == yDir:
+									#print("Xcolide")
+								if entity.get_move_y() == yDir and (a > b or b > a):
 									entity.set_move_y(0)
-									#entity.set_move_y(-entity.get_move_y())
-							"""if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-								if entity.get_move_x() == clamp01(tile.get_pos_x() - entity.get_pos_x()):
-									entity.set_move_x(0)"""
+									#print("                      Ycolide")
+							
+							"""if self.__colliding_x__(entity, tile) or self.__colliding_y__(entity, tile):
+								if self.__colliding_x__(entity, tile):
+									if entity.get_move_x() == xDir:
+										entity.set_move_x(0)
+								elif self.__colliding_y__(entity, tile):
+									if entity.get_move_y() == yDir:
+										entity.set_move_y(0)"""
+									
 								
 
 					entity.update(frameDelta)
@@ -264,7 +285,6 @@ class Program():
 			ui.get_size_x(),
 			ui.get_size_y()
 		))
-		
 		pygame.draw.rect(self.pySurface, ui.borderColor, (
 			ui.get_pos_x() - (ui.get_size_x() * 0.5),
 			ui.get_pos_y() - (ui.get_size_y() * 0.5),

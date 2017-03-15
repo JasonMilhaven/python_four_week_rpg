@@ -1,5 +1,11 @@
 RPG_Initial_Design.txt----------------------------------------------------------------------------------------
 
+
+Design Number: 1
+Author(s): Jason
+
+
+
 Open world rpg game, after base classes are created, make grass tile/1 monster/player
 
 
