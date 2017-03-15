@@ -258,10 +258,10 @@ class Program():
 							#print(entity.get_pos())
 						
 							if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-								if entity.get_move_x() == xDir and (b > a or a > b):
+								if entity.get_move_x() == xDir and (b > a):
 									entity.set_move_x(0)
 									#print("Xcolide")
-								if entity.get_move_y() == yDir and (a > b or b > a):
+								if entity.get_move_y() == yDir and (a > b):
 									entity.set_move_y(0)
 									#print("                      Ycolide")
 							
