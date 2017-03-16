@@ -3,6 +3,7 @@ import random
 
 from Tile import *
 from utilities import *
+from Monster import *
 
 """
 	******************************************************************************
@@ -37,6 +38,8 @@ class Room():
 	"""
 
 	def __init__(self, width, height, player):
+		
+		self.player = player
 		self.tiles = []
 		self.entities = []
 		self.borderRooms = []
@@ -54,3 +57,9 @@ class Room():
 					t.img = load_img("GrassMts.png")
 					t.isBlocking = True
 				self.tiles.append(t)
+		for i in range(0, 4):
+			print("")
+			Monster(10, 10)
+
+			
+			

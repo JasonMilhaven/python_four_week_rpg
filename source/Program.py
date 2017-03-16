@@ -89,8 +89,8 @@ class Program():
 		
 		# make the ui
 		u = UITextComponent()
-		u.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT * 0.89)
-		u.set_size(self.WIN_WIDTH, TILE_SCALE * 4)
+		u.set_size(self.WIN_WIDTH, self.WIN_HEIGHT / 6)
+		u.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT - u.get_size_y() / 2)
 		u.set_visible(True)
 		u.name = "UI 1"
 		u.text = "test text here test text here test text here "
@@ -108,14 +108,9 @@ class Program():
 		b.img = load_img("TestBanner.png")
 		self.uiComponents.append(b)
 		
-		# testing collision
+		# any sort of testing should be done here
 		
-		print("Ctrl+F to here to fix the rooms")
-		"""del self.activeGame.currentRoom.tiles[:] # delete each element in the list
-		t = Tile(TILE_SCALE * 4, TILE_SCALE * 4)
-		t.img = load_img("GrassMts.png")
-		t.isBlocking = True
-		self.activeGame.currentRoom.tiles.append(t)"""
+		
 		
 		# begin the main program
 		
