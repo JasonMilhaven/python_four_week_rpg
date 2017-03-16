@@ -147,8 +147,8 @@ def load_font(name, size):
 	History:
 		
 	==============================================================================
-"""	
-	
+"""
+
 def clamp01(num):
 	ret = num
 
@@ -161,3 +161,26 @@ def clamp01(num):
 		ret = max
 
 	return ret
+
+"""
+	==============================================================================
+	
+	Method: distance
+
+	Description: Returns distance between two Transforms.
+		
+	Author: Jason Milhaven
+		
+	History:
+		
+	==============================================================================
+"""
+
+def distance(self, t1, t2):
+	x1 = t1.get_pos_x()
+	y1 = t1.get_pos_y()
+	x2 = t2.get_pos_x()
+	y2 = t2.get_pos_y()
+	dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+	return dist
+

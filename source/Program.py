@@ -169,15 +169,6 @@ class Program():
 		
 		return ret
 		
-		
-	def __distance__(self, t1, t2):
-		x1 = t1.get_pos_x()
-		y1 = t1.get_pos_y()
-		x2 = t2.get_pos_x()
-		y2 = t2.get_pos_y()
-		dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-		return dist
-		
 	
 	def event_loop(self):
 		while self.isRunning:
