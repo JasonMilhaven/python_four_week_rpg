@@ -18,7 +18,7 @@ from Entity import *
 
 class Player(Entity):
 
-	def __init__(self, posX = TILE_SCALE * 0.5, posY = TILE_SCALE * 0.5):
-		super().__init__(posX, posY)
+	def __init__(self, posX = TILE_SCALE * 0.5, posY = TILE_SCALE * 0.5, room):
+		super().__init__(posX, posY, room)
 		
 		
