@@ -38,7 +38,7 @@ class Room():
 	"""
 
 	def __init__(self, width, height, player):
-		
+
 		self.player = player
 		self.tiles = []
 		self.entities = []
@@ -58,7 +58,7 @@ class Room():
 					t.isBlocking = True
 				self.tiles.append(t)
 		for i in range(0, 4):
-			print("")
+			print("TestMonster created")
 			Monster(10, 10)
 
 			
