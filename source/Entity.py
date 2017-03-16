@@ -49,7 +49,8 @@ class EntityState(Enum):
 		
 class Entity(Transform):
 
-	def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE, sizeY = TILE_SCALE):
+	#def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE, sizeY = TILE_SCALE):
+	def __init__(self, posX = 0, posY = 0, sizeX = TILE_SCALE - 4, sizeY = TILE_SCALE - 4):
 		super().__init__(posX, posY, sizeX, sizeY)
 		
 		self.ANIM_WALK_DELAY = 0.2
