@@ -1,5 +1,4 @@
 import time
-import math
 import threading
 import sys
 import os
@@ -36,7 +35,7 @@ class Program():
 	"""
 		==============================================================================
 		
-		Method: __init__
+		Method: init
 		
 		Description: Constructor for the Program class, creates the window given
 		a title, w and h constants, sets window icon.
@@ -66,7 +65,6 @@ class Program():
 		
 		# core variables
 		self.isRunning = True
-		self.isInGame = False
 		self.uiComponents = []
 		self.hoveredUI = None
 		self.input = Input()
@@ -230,7 +228,7 @@ class Program():
 				self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
 				
 				# ensure entities cannot walk into tiles
-				for entity in self.activeGame.currentRoom.entities:
+				for entity in self.activeGame.currentRoom.entities:				
 					for tile in self.activeGame.currentRoom.tiles:
 						if tile.isBlocking:
 						
@@ -242,24 +240,12 @@ class Program():
 							
 							c = abs(a)
 							d = abs(b)
-							
-							#print(entity.get_pos())
 						
 							if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
 								if entity.get_move_x() == xDir and (c > d):
 									entity.set_move_x(0)
 								if entity.get_move_y() == yDir and (d > c):
-									entity.set_move_y(0)
-
-							"""if self.__colliding_x__(entity, tile) or self.__colliding_y__(entity, tile):
-								if self.__colliding_x__(entity, tile):
-									if entity.get_move_x() == xDir:
-										entity.set_move_x(0)
-								elif self.__colliding_y__(entity, tile):
-									if entity.get_move_y() == yDir:
-										entity.set_move_y(0)"""
-									
-								
+									entity.set_move_y(0)								
 
 					entity.update(frameDelta)
 					

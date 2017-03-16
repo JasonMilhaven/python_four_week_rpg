@@ -18,5 +18,5 @@ from Monster import *
 
 class TestMonster(Monster):
 
-	def __init__(self, posX = 0, posY = 0):
-		super().__init__(posX, posY)
+	def __init__(self, posX = 0, posY = 0, room = None):
+		super().__init__(posX, posY, room)

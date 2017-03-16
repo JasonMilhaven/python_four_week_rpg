@@ -3,7 +3,7 @@ import random
 
 from Tile import *
 from utilities import *
-from Monster import *
+from TestMonster import *
 
 """
 	******************************************************************************
@@ -57,9 +57,9 @@ class Room():
 					t.img = load_img("GrassMts.png")
 					t.isBlocking = True
 				self.tiles.append(t)
-		for i in range(0, 4):
+		for i in range(0, 1):
 			print("TestMonster created")
-			Monster(10, 10)
+			TestMonster(10, 10, self)
 
 			
 			

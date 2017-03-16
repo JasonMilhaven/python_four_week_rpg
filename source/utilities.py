@@ -1,5 +1,7 @@
 
+import math
 import os
+
 import pygame
 
 BLUE = (0, 0, 255)
