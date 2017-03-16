@@ -59,8 +59,8 @@ class Program():
 		self.WIN_TITLE = "Pythonica"
 		#self.WIN_WIDTH = 1024
 		#self.WIN_HEIGHT = 576
-		self.WIN_WIDTH = 1366
-		self.WIN_HEIGHT = 768
+		self.WIN_WIDTH = 1280
+		self.WIN_HEIGHT = 720
 		self.WIN_ICON_FILENAME = "Icon.png"
 		self.FILL_COLOR = (0, 0, 0)
 		
@@ -111,11 +111,11 @@ class Program():
 		# testing collision
 		
 		print("Ctrl+F to here to fix the rooms")
-		del self.activeGame.currentRoom.tiles[:] # delete each element in the list
+		"""del self.activeGame.currentRoom.tiles[:] # delete each element in the list
 		t = Tile(TILE_SCALE * 4, TILE_SCALE * 4)
 		t.img = load_img("GrassMts.png")
 		t.isBlocking = True
-		self.activeGame.currentRoom.tiles.append(t)
+		self.activeGame.currentRoom.tiles.append(t)"""
 		
 		# begin the main program
 		
@@ -242,7 +242,6 @@ class Program():
 			
 			if self.activeGame:
 				self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
-					
 				
 				# ensure entities cannot walk into tiles
 				for entity in self.activeGame.currentRoom.entities:
@@ -255,16 +254,17 @@ class Program():
 							xDir = clamp01(a)
 							yDir = clamp01(b)
 							
+							c = abs(a)
+							d = abs(b)
+							
 							#print(entity.get_pos())
 						
 							if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
-								if entity.get_move_x() == xDir and (b > a):
+								if entity.get_move_x() == xDir and (c > d):
 									entity.set_move_x(0)
-									#print("Xcolide")
-								if entity.get_move_y() == yDir and (a > b):
+								if entity.get_move_y() == yDir and (d > c):
 									entity.set_move_y(0)
-									#print("                      Ycolide")
-							
+
 							"""if self.__colliding_x__(entity, tile) or self.__colliding_y__(entity, tile):
 								if self.__colliding_x__(entity, tile):
 									if entity.get_move_x() == xDir:
