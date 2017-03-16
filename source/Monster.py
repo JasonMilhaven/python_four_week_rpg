@@ -1,5 +1,4 @@
 
-
 from Entity import *
 
 """
@@ -20,6 +19,8 @@ from Entity import *
 class Monster(Entity):
 	
 	def __init__(self, posX = 0, posY = 0):
+		if type(self) == Monster:
+			raise TypeError("please use the TestMonster class instead of direct Monster instantiation")
 		super().__init__(posX, posY)
 		
 	__offsets__ = []	
@@ -27,7 +28,7 @@ class Monster(Entity):
 	__currentOffset__ = 0
 	
 	def next_offset(self):
-		if self.__currentOffset__ >= len(self.__offsets__) - 1
+		if self.__currentOffset__ >= len(self.__offsets__) - 1:
 			self.__currentOffset__ = 0
 		else:
 			self.__currentOffset__ += 1
