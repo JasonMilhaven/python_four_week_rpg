@@ -24,7 +24,7 @@ class Game():
     """
         ==============================================================================
         
-        Method: __init__
+        Method: init
         
         Description: Constructor for the Game class, will create rooms given the width
         and height.

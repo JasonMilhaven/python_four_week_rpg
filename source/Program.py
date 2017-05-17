@@ -118,6 +118,21 @@ class Program():
         self.drawThread.start()
         self.event_loop()
 
+    """
+        ==============================================================================
+        
+        Method: close
+        
+        Description: Called when the user closes the window, sets isRunning to False,
+        ending both the game and draw loops.  Kills the drawThread, ends pygame,
+        calls sys.exit to cleanup any resources.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
         
     def close(self):
         self.isRunning = False
@@ -128,17 +143,43 @@ class Program():
         pygame.quit()
         sys.exit(0)
 
+    """
+        ==============================================================================
+        
+        Method: is_in
+        
+        Description: If x and y are inside transform, returns true, otherwise returns false.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
 
-    def __is_in__(self, mX, mY, transform):
+    def __is_in__(self, x, y, transform):
         
         ret = False
         
-        xCondition = mX <= transform.get_pos_x() + transform.get_size_x() * 0.5 and mX > transform.get_pos_x() - transform.get_size_x() * 0.5
-        yCondition = mY <= transform.get_pos_y() + transform.get_size_y() * 0.5 and mY > transform.get_pos_y() - transform.get_size_y() * 0.5
+        xCondition = x <= transform.get_pos_x() + transform.get_size_x() * 0.5 and mX > transform.get_pos_x() - transform.get_size_x() * 0.5
+        yCondition = y <= transform.get_pos_y() + transform.get_size_y() * 0.5 and mY > transform.get_pos_y() - transform.get_size_y() * 0.5
         
         ret = xCondition and yCondition
         return ret
         
+    """
+        ==============================================================================
+        
+        Method: colliding_x
+        
+        Description: Returns true if t1 and t2 are colliding on the x axis.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
 
     def __colliding_x__(self, t1, t2):
     
@@ -151,6 +192,19 @@ class Program():
         
         return ret
 
+    """
+        ==============================================================================
+        
+        Method: colliding_y
+        
+        Description: Returns true if t1 and t2 are colliding on the y axis.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
         
     def __colliding_y__(self, t1, t2):
         ret = False
@@ -162,6 +216,24 @@ class Program():
         
         return ret
         
+    """
+        ==============================================================================
+        
+        Method: event_loop
+        
+        Description: May be refered to as the "Game Loop" in comments as well as "Event Loop".
+        
+        Called on the main thread, runs while the program isRunning.
+        Handles each event: user input, mouse click on ui components, and
+        user closing the window.  Also handles any game-related logic and calls entity update
+        functions.  Handles collision for entities and tiles.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def event_loop(self):
         while self.isRunning:
@@ -249,6 +321,20 @@ class Program():
 
                     entity.update(frameDelta)
                     
+    """
+        ==============================================================================
+        
+        Method: draw_ui
+        
+        Description: Draws a UIComponent instance using pygame rectangles.
+        Draws the border as rectangles.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def __draw_ui__(self, ui):
         pygame.draw.rect(self.pySurface, ui.color, (
@@ -281,6 +367,22 @@ class Program():
             ui.borderSize,
             ui.get_size_y()
         ))
+    
+    """
+        ==============================================================================
+        
+        Method: draw_loop
+        
+        Description: Called on the seperate thread, runs while the program isRunning.
+        Draws any visible UIComponent instances.  Draws tiles and entities,
+        calls animate on entities.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def draw_loop(self):
         while self.isRunning:

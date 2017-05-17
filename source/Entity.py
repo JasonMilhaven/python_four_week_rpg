@@ -97,21 +97,40 @@ class Entity(Transform):
             load_img("e3.png")
         ]
         self.lastTime = time.time()
-
+    
+    # getter for moveX
+    def get_move_x(self):
+        return self.__moveX__
+    
     """
         ==============================================================================
         
-        Method: 
+        Method: set_move_x
         
-        Description: Constructor for the Entity class, defines property backends for
-        movement, defines maxHealth, damage, moveSpeed, range, and the current room.
-        Defines the "state" of the Entity, which is either idling, walking, or attacking
-        based on movement and/or attack method calls.
+        Description: set moveX with v clamped between -1 and 1.
+        Call check_moving after.
         
-        Loads default animation images, this class should not be directly instantiated,
-        yet will not error out if it is.
+        Author: Jason Milhaven
         
-        Strength, dexterity, and intellegence are likely to go unused.
+        History:
+        
+        ==============================================================================
+    """
+    def set_move_x(self, v):
+        self.__moveX__ = clamp01(v)
+        Entity.__check_moving__(self)
+    
+    # getter for moveY
+    def get_move_y(self):
+        return self.__moveY__
+    
+    """
+        ==============================================================================
+        
+        Method: set_move_y
+        
+        Description: set moveY with v clamped between -1 and 1.
+        Call check_moving after.
         
         Author: Jason Milhaven
         
@@ -120,38 +139,61 @@ class Entity(Transform):
         ==============================================================================
     """
     
-    def get_move_x(self):
-        return self.__moveX__
-    
-    def set_move_x(self, v):
-        self.__moveX__ = clamp01(v)
-        Entity.__check_moving__(self)
-    
-    def get_move_y(self):
-        return self.__moveY__
-    
     def set_move_y(self, v):
         self.__moveY__ = clamp01(v)
         Entity.__check_moving__(self)
     
+    # getter for move
     def get_move(self):
         return self.get_move_x(), self.get_move_y()
     
+    # setter for move
     def set_move(self, x, y):
         self.set_move_x(x)
         self.set_move_y(y)
-    
+        
+    # getter for health
     def get_health(self):
         return self.__health__
-        
+    
+    # setter for health
     def set_health(self, v):
         self.__health__ = v
+    
+    """
+        ==============================================================================
+        
+        Method: check_moving
+        
+        Description: If the entity is moving, set state to idle.  Otherwise, set to walking.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def __check_moving__(self):
         if abs(self.get_move_x()) + abs(self.get_move_y()) == 0:
             self.__entityState__ = EntityState.IDLING
         else:
             self.__entityState__ = EntityState.WALKING
+    
+    """
+        ==============================================================================
+        
+        Method: animate
+        
+        Description: Set the entity's display image to the image that corresponds to
+        the entity's state.  Walking will allow two different images.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def animate(self):
         if self.__entityState__ == EntityState.IDLING:
@@ -164,12 +206,40 @@ class Entity(Transform):
         if self.__entityState__ == EntityState.ATTACKING:
             self.img = self.anims[2]
         
+    """
+        ==============================================================================
+        
+        Method: update
+        
+        Description: Called by main program in the game loop, actually changes the position
+        of the entity given moveX and moveY.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def update(self, frameDelta):
         newX = self.get_pos_x() + self.get_move_x() * self.moveSpeed * frameDelta
         newY = self.get_pos_y() + self.get_move_y() * self.moveSpeed * frameDelta
         self.set_pos(newX, newY)
     
+    """
+        ==============================================================================
+        
+        Method: attack
+        
+        Description: Attacks a given target, sets state to attacking.
+        Will check to see if enemy is in the entity's attack range.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
     
     def attack(self, enemy):
         self.__entityState__ = EntityState.ATTACKING

@@ -23,21 +23,39 @@ from utilities import *
 
 class Input(Transform):
 
-    # do not allow overloading the constructor
+    """
+        ==============================================================================
+        
+        Method: init
+        
+        Description: Calls base contructor.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+
     def __init__(self):
         super().__init__()
 
+    # setter for posX, value is clamped between -1 and 1
     def set_pos_x(self, v):
         self._posX_ = clamp01(v)
         
+    # setter for posY, value is clamped between -1 and 1
     def set_pos_y(self, v):
-        self._posY_ = clamp01(v)
-        
+        self._posY_ = clamp01(v)    
 
+    
     # no reason to increase size of instance
     # setters do nothing
+    
+    # setter for sizeX
     def set_size_x(self, v):
         pass
     
+    # setter for sizeY
     def set_size_x(self, v):
         pass
