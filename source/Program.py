@@ -161,8 +161,8 @@ class Program():
         
         ret = False
         
-        xCondition = x <= transform.get_pos_x() + transform.get_size_x() * 0.5 and mX > transform.get_pos_x() - transform.get_size_x() * 0.5
-        yCondition = y <= transform.get_pos_y() + transform.get_size_y() * 0.5 and mY > transform.get_pos_y() - transform.get_size_y() * 0.5
+        xCondition = x <= transform.get_pos_x() + transform.get_size_x() * 0.5 and x > transform.get_pos_x() - transform.get_size_x() * 0.5
+        yCondition = y <= transform.get_pos_y() + transform.get_size_y() * 0.5 and y > transform.get_pos_y() - transform.get_size_y() * 0.5
         
         ret = xCondition and yCondition
         return ret
@@ -300,7 +300,9 @@ class Program():
                 self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
                 
                 # ensure entities cannot walk into tiles
-                for entity in self.activeGame.currentRoom.entities:             
+                for entity in self.activeGame.currentRoom.entities:
+                    entity.pre_update(frameDelta)
+                
                     for tile in self.activeGame.currentRoom.tiles:
                         if tile.isBlocking:
                         
@@ -317,7 +319,7 @@ class Program():
                                 if entity.get_move_x() == xDir and (c > d):
                                     entity.set_move_x(0)
                                 if entity.get_move_y() == yDir and (d > c):
-                                    entity.set_move_y(0)                                
+                                    entity.set_move_y(0)
 
                     entity.update(frameDelta)
                     

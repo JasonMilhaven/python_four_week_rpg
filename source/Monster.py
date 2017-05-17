@@ -41,11 +41,11 @@ class Monster(Entity):
         super().__init__(posX, posY, room)
         
         self.__sightRadius__ = 5
-        self.__offsets__ = [
-            (5, 0),
-            (0, 5),
-            (-5, 0),
-            (0, -5)
+        self.offsets = [
+            (100, 0),
+            (0, 100),
+            (-100, 0),
+            (0, -100)
         ]
         self.__offsetStartingPoint__ = self.get_pos()
         self.__currentOffset__ = 0
@@ -69,10 +69,30 @@ class Monster(Entity):
     """
         
     def next_offset(self):
-        if self.__currentOffset__ >= len(self.__offsets__) - 1:
+        self.__offsetStartingPoint__ = self.get_pos()
+        if self.__currentOffset__ >= len(self.offsets) - 1:
             self.__currentOffset__ = 0
         else:
             self.__currentOffset__ += 1
+    
+    """
+        ==============================================================================
+        
+        Method: pre_update
+        
+        Description: Override base class pre_update to try to attack the player.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+    def pre_update(self, frameDelta):
+         if distance(self, self.room.player) <= self.range:
+            self.attack(self.room.player)
+            self.set_move(self.room.player.get_pos_x() - self.get_pos_x(), self.room.player.get_pos_y() - self.get_pos_y())
         
     """
         ==============================================================================
@@ -91,21 +111,43 @@ class Monster(Entity):
         ==============================================================================
     """
     
-    def update(self, frameDelta):       
-        if self.get_pos_x() >= self.__offsetStartingPoint__[0] + self.__offsets__[self.__currentOffset__][0] and self.get_pos_y() >= self.__offsetStartingPoint__[1] + self.__offsets__[self.__currentOffset__][1]:
-            self.next_offset()
+    def update(self, frameDelta):
+        """
+        if abs(posX) >= abs(offsetStartingPointX + currentOffsetX)
+        and 
+        if abs(posY) >= abs(offsetStartingPointY + currentOffsetY)
+        then do next offset
+        """
+        #if (self.get_pos_x()) >= abs(self.__offsetStartingPoint__[0] + -self.offsets[self.__currentOffset__][0]) and (self.get_pos_y()) >= abs(self.__offsetStartingPoint__[1] + -self.offsets[self.__currentOffset__][1]):
+        #    self.next_offset()
         
         #if self.get_move_x() == 0 and self.get_move_y() == 0:
         #   self.next_offset()
+        
+        #if (self.get_pos_x() - self.__offsetStartingPoint__[0] > self.offsets[self.__currentOffset__][0]) or (self.get_pos_y() - self.__offsetStartingPoint__[1] > self.offsets[self.__currentOffset__][1]):
+        #    self.next_offset()
+        
+        xStart = self.__offsetStartingPoint__[0]
+        yStart = self.__offsetStartingPoint__[1]
+        
+        xOff = self.offsets[self.__currentOffset__][0]
+        yOff = self.offsets[self.__currentOffset__][1]
+        
+        xPos = self.get_pos_x()
+        yPos = self.get_pos_y()
+        
+        #if (xStart - self.get_pos_x() > xOff or yStart - self.get_pos_y() > yOff):
+        #    self.next_offset()
+        
+        if (abs(xPos - xStart) > abs(xOff) or abs(yPos - yStart) > abs(yOff)):
+            self.next_offset()
+            #raise Exception("condition met")
         
         """if distance(self, self.room.player) <= self.__sightRadius__:
             self.set_move_x(self.room.player.get_pos_x() - self.get_pos_x())
             self.set_move_y(self.room.player.get_pos_y() - self.get_pos_y())"""
         
-        if distance(self, self.room.player) <= self.range:
-            self.attack(self.room.player)
-        
-        a = self.__offsets__[self.__currentOffset__]
+        a = self.offsets[self.__currentOffset__]
         self.set_move(a[0], a[1])
         
         super().update(frameDelta)

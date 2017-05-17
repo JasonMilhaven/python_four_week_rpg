@@ -82,7 +82,7 @@ class Entity(Transform):
         self.__health__ = self.maxHealth
         self.damage = 0
         self.moveSpeed = 250 #500
-        self.range = 2
+        self.range = 500
         self.room = room
         
         # likely to go unused
@@ -205,6 +205,25 @@ class Entity(Transform):
                 self.lastTime = time.time()
         if self.__entityState__ == EntityState.ATTACKING:
             self.img = self.anims[2]
+        
+    """
+        ==============================================================================
+        
+        Method: pre_update
+        
+        Description: Called by main program in the game loop before update is called, runs before
+        collisions are checked.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+        
+    def pre_update(self, frameDelta):
+        pass
         
     """
         ==============================================================================

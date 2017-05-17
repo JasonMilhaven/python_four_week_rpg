@@ -44,7 +44,7 @@ class UIComponent(Transform):
         self.borderSize = 2
         
         self.set_visible_func = None
-        self.onclicked_func = None
+        self.on_clicked_func = None
         self.on_hover_begin_func = None
         self.on_hover_end_func = None
         
