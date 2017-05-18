@@ -21,11 +21,9 @@ class TestMonster(Monster):
     def __init__(self, posX = 0, posY = 0, room = None):
         super().__init__(posX, posY, room)
         self.offsets = [
-            (500, 0),
-            (0, 500),
-            (-500, 0),
-            (0, -500),
-            (250, 260),
-            (-250, -260)
+            (100, 0),
+            (0, 100),
+            (-100, 0),
+            (0, -100)
         ]
         self.moveSpeed = 100

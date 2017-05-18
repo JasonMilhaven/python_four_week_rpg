@@ -271,8 +271,9 @@ class Program():
                 elif event.type == pygame.KEYDOWN:
                 
                     rawKey = event.key
-                    prettyKey = event.unicode
+                    #prettyKey = event.unicode
                     
+                    # wasd down
                     if rawKey == pygame.K_w:
                         self.input.set_pos_y(-1)
                     elif rawKey == pygame.K_a:
@@ -282,11 +283,21 @@ class Program():
                     elif rawKey == pygame.K_d:
                         self.input.set_pos_x(1)
                     
+                    # arrows down
+                    if rawKey == pygame.K_UP:
+                        self.input.set_pos_y(-1)
+                    elif rawKey == pygame.K_LEFT:
+                        self.input.set_pos_x(-1)
+                    elif rawKey == pygame.K_DOWN:
+                        self.input.set_pos_y(1)
+                    elif rawKey == pygame.K_RIGHT:
+                        self.input.set_pos_x(1)
                     
                 elif event.type == pygame.KEYUP:
                 
                     rawKey = event.key
-                        
+                    
+                    # wasd up
                     if rawKey == pygame.K_w:
                         self.input.set_pos_y(-self.input.get_pos_y() + 1)
                     elif rawKey == pygame.K_a:
@@ -294,6 +305,16 @@ class Program():
                     elif rawKey == pygame.K_s:
                         self.input.set_pos_y(-self.input.get_pos_y() - 1)
                     elif rawKey == pygame.K_d:
+                        self.input.set_pos_x(-self.input.get_pos_x() - 1)
+                        
+                    # arrows up
+                    if rawKey == pygame.K_UP:
+                        self.input.set_pos_y(-self.input.get_pos_y() + 1)
+                    elif rawKey == pygame.K_LEFT:
+                        self.input.set_pos_x(-self.input.get_pos_x() + 1)
+                    elif rawKey == pygame.K_DOWN:
+                        self.input.set_pos_y(-self.input.get_pos_y() - 1)
+                    elif rawKey == pygame.K_RIGHT:
                         self.input.set_pos_x(-self.input.get_pos_x() - 1)
             
             if self.activeGame:

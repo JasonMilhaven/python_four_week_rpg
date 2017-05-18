@@ -81,8 +81,8 @@ class Entity(Transform):
         self.maxHealth = 100
         self.__health__ = self.maxHealth
         self.damage = 0
-        self.moveSpeed = 250 #500
-        self.range = 500
+        self.moveSpeed = 250
+        self.range = 300
         self.room = room
         
         # likely to go unused
