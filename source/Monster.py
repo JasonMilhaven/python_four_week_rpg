@@ -40,7 +40,7 @@ class Monster(Entity):
             raise TypeError("please use the TestMonster class instead of direct Monster instantiation")
         super().__init__(posX, posY, room)
         
-        self.__sightRadius__ = 5
+        self.sightRange = 100
         self.offsets = [
             (100, 0),
             (0, 100),
@@ -50,6 +50,7 @@ class Monster(Entity):
         self.__offsetStartingPoint__ = self.get_pos()
         self.__currentOffset__ = 0
         self.__totalOffsetsCompleted__ = 0
+        self.target = None
         self.room = room
         
         if self.room:
@@ -109,7 +110,8 @@ class Monster(Entity):
     """
         
     def _on_offset_completed_(self, completedIndex, newIndex, totalOffsetsCompleted):
-        print("offset completed")
+        # wtf is this trash
+        #print("offset completed")
         #raise NotImplementedError("use this for Monster subclasses")
         pass
         
@@ -166,7 +168,7 @@ class Monster(Entity):
         
         Method: try_attack
         
-        Description: Check for player position, if the player is within the range
+        Description: Check for player position, if the player is within the sightRange
         field of this instance, move towards and attack player.
         
         Author: Jason Milhaven
@@ -177,9 +179,16 @@ class Monster(Entity):
     """
     
     def try_attack(self):
-        if distance(self, self.room.player) <= self.range:
-            self.attack(self.room.player)
-            self.set_move(self.room.player.get_pos_x() - self.get_pos_x(), self.room.player.get_pos_y() - self.get_pos_y())
+        # update this conditional with a list of enemies
+        # if monsters should ever attack each other?
+        if distance(self, self.room.player) <= self.sightRange:
+            self.target = self.room.player
+        else:
+            self.target = None
+            
+        if (self.target):
+            self.attack(self.target)
+            self.set_move(self.target.get_pos_x() - self.get_pos_x(), self.target.get_pos_y() - self.get_pos_y())
     
     """
         ==============================================================================
@@ -196,6 +205,8 @@ class Monster(Entity):
     """
     
     def pre_update(self, frameDelta):
+        super().pre_update(frameDelta)
+    
         self.try_offset()
         self.try_attack()
         
@@ -205,7 +216,7 @@ class Monster(Entity):
         Method: update
         
         Description: If the monster has completed movement of its' current offset,
-        call next_offset.  Check if the player is in range for attack.  Move the player
+        call next_offset.  Check if the player is in sightRange for attack.  Move the player
         in the direction of the current offset.
         Calls the base class update.
         
@@ -217,10 +228,9 @@ class Monster(Entity):
     """
     
     def update(self, frameDelta):
+        super().update(frameDelta)
+        
         # if the polarity of the current x offset is not equal to move x
         # or the condition applies on the y-axis
         if (get_polarity_of(self.offsets[self.__currentOffset__][0]) != self.get_move_x() or get_polarity_of(self.offsets[self.__currentOffset__][1]) != self.get_move_y()):
             self.next_offset()
-    
-        super().update(frameDelta)
-        
