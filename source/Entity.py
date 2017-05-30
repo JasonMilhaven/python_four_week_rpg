@@ -24,9 +24,9 @@ from utilities import *
 """
 
 class EntityState(Enum):
-        IDLING = 0
-        WALKING = 1
-        ATTACKING = 2
+    IDLING = 0
+    WALKING = 1
+    ATTACKING = 2
 
 
 """
@@ -120,6 +120,7 @@ class Entity(Transform):
         
         ==============================================================================
     """
+    
     def set_move_x(self, v):
         self.__moveX__ = clamp01(v)
         Entity.__check_moving__(self)
@@ -215,6 +216,25 @@ class Entity(Transform):
     """
         ==============================================================================
         
+        Method: delayed_update
+        
+        Description: Is called at minimum interval of the Program's defined updateDelay,
+        but can take longer and is not called at a fixed interval; frameDelta will
+        always have a min value, but never less than the value, and sometimes more.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+    def delayed_update(self, frameDelta):
+        pass
+        
+    """
+        ==============================================================================
+        
         Method: pre_update
         
         Description: Called by main program in the game loop before update is called, runs before
@@ -252,7 +272,18 @@ class Entity(Transform):
         self.set_pos(newX, newY)
     
     """
-    
+        ==============================================================================
+        
+        Method: wait_attack
+        
+        Description: Waits the attack delay, is called in attack method to ensure
+        that attack cannot be called every frame.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
     """
     
     async def wait_attack(self):
@@ -277,11 +308,12 @@ class Entity(Transform):
         ==============================================================================
     """
     
+    """ this method is slowing the game """
     def attack(self, enemy):
-        if (not self.attackDelayActive):
-            self.attackDelayActive = True
+        if (not self.attackDelayActive) and (distance(self, enemy) <= self.range):
+            print("is there lag yet?")
+            """self.attackDelayActive = True
             asyncio.get_event_loop().run_until_complete(self.wait_attack())
-        
-        if distance(self, enemy) <= self.range:
+            
             self.__entityState__ = EntityState.ATTACKING
-            enemy.set_health(enemy.get_health() - self.damage)
+            enemy.set_health(enemy.get_health() - self.damage)"""

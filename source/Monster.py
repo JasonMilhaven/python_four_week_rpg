@@ -40,7 +40,7 @@ class Monster(Entity):
             raise TypeError("please use the TestMonster class instead of direct Monster instantiation")
         super().__init__(posX, posY, room)
         
-        self.sightRange = 100
+        self.sightRange = 500
         self.offsets = [
             (100, 0),
             (0, 100),
@@ -189,6 +189,26 @@ class Monster(Entity):
         if (self.target):
             self.attack(self.target)
             self.set_move(self.target.get_pos_x() - self.get_pos_x(), self.target.get_pos_y() - self.get_pos_y())
+    
+    """
+        ==============================================================================
+        
+        Method: delayed_update
+        
+        Description: Override delayed update.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+    def delayed_update(self, frameDelta):
+        super().delayed_update(frameDelta)
+    
+        """self.try_offset()"""
+        """self.try_attack()"""
     
     """
         ==============================================================================

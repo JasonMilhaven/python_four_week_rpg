@@ -68,6 +68,8 @@ class Program():
         self.uiComponents = []
         self.hoveredUI = None
         self.input = Input()
+        self.updateDelay = 0.1 #1
+        self.delayedUpdateAccumulator = 0
         self.lastEventTime = time.time()
         self.lastDrawTime = time.time()
         self.pyClock = pygame.time.Clock()
@@ -115,7 +117,7 @@ class Program():
         self.drawThread = threading.Thread(target=self.draw_loop)
         #self.drawThread.setDaemon(True)
         # threads should be killed manually
-        self.drawThread.start()
+        #self.drawThread.start()
         self.event_loop()
 
     """
@@ -146,7 +148,7 @@ class Program():
     """
         ==============================================================================
         
-        Method: is_in
+        Method: __is_in__
         
         Description: If x and y are inside transform, returns true, otherwise returns false.
         
@@ -170,7 +172,7 @@ class Program():
     """
         ==============================================================================
         
-        Method: colliding_x
+        Method: __colliding_x__
         
         Description: Returns true if t1 and t2 are colliding on the x axis.
         
@@ -195,7 +197,7 @@ class Program():
     """
         ==============================================================================
         
-        Method: colliding_y
+        Method: __colliding_y__
         
         Description: Returns true if t1 and t2 are colliding on the y axis.
         
@@ -237,6 +239,7 @@ class Program():
     
     def event_loop(self):
         while self.isRunning:
+            self.draw_loop()
             mX, mY = pygame.mouse.get_pos()
             
             frameDelta = time.time() - self.lastEventTime
@@ -341,13 +344,18 @@ class Program():
                                     entity.set_move_x(0)
                                 if entity.get_move_y() == yDir and (d > c):
                                     entity.set_move_y(0)
+                
+                    self.delayedUpdateAccumulator += frameDelta
+                    if self.delayedUpdateAccumulator >= self.updateDelay:
+                        entity.delayed_update(self.delayedUpdateAccumulator)
+                        self.delayedUpdateAccumulator = 0
 
                     entity.update(frameDelta)
                     
     """
         ==============================================================================
         
-        Method: draw_ui
+        Method: __draw_ui__
         
         Description: Draws a UIComponent instance using pygame rectangles.
         Draws the border as rectangles.
@@ -402,13 +410,14 @@ class Program():
         
         Author: Jason Milhaven
         
-        History:
+        History: Got rid of second thread.
         
         ==============================================================================
     """
     
     def draw_loop(self):
-        while self.isRunning:
+        #while self.isRunning:
+        if isRunning:
             frameDelta = time.time() - self.lastDrawTime
             self.lastDrawTime = time.time()
             
