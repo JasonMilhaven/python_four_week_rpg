@@ -47,7 +47,8 @@ class Program():
         
         Author: Jason Milhaven
         
-        History:
+        History: Disabled draw thread as a hotfix to prevent load crashing.
+        A single thread seems to make walking smooth?
         
         ==============================================================================
     """
@@ -68,7 +69,7 @@ class Program():
         self.uiComponents = []
         self.hoveredUI = None
         self.input = Input()
-        self.updateDelay = 0.1 #1
+        self.updateDelay = 1
         self.delayedUpdateAccumulator = 0
         self.lastEventTime = time.time()
         self.lastDrawTime = time.time()
@@ -404,20 +405,21 @@ class Program():
         
         Method: draw_loop
         
-        Description: Called on the seperate thread, runs while the program isRunning.
-        Draws any visible UIComponent instances.  Draws tiles and entities,
-        calls animate on entities.
+        Description: Got rid of second thread.  draw_loop is now called at the end
+        of the event loop.
         
         Author: Jason Milhaven
         
-        History: Got rid of second thread.
+        History: Called on the seperate thread, runs while the program isRunning.
+        Draws any visible UIComponent instances.  Draws tiles and entities,
+        calls animate on entities.
         
         ==============================================================================
     """
     
     def draw_loop(self):
         #while self.isRunning:
-        if isRunning:
+        if self.isRunning:
             frameDelta = time.time() - self.lastDrawTime
             self.lastDrawTime = time.time()
             

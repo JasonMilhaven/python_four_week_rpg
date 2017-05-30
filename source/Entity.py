@@ -82,7 +82,8 @@ class Entity(Transform):
         self.maxHealth = 100
         self.__health__ = self.maxHealth
         self.damage = 0
-        self.attackDelay = 0.2
+        self.attackDelay = 1 #0.2
+        print("attackDelay set to 1")
         self.attackDelayActive = False
         self.moveSpeed = 250
         self.range = 300
@@ -290,6 +291,7 @@ class Entity(Transform):
         print("wait attack begin")
         
         await asyncio.sleep(self.attackDelay)
+        #await self.attackDelay
         print("wait attack end")
         self.attackDelayActive = False
     
@@ -311,9 +313,14 @@ class Entity(Transform):
     """ this method is slowing the game """
     def attack(self, enemy):
         if (not self.attackDelayActive) and (distance(self, enemy) <= self.range):
-            print("is there lag yet?")
-            """self.attackDelayActive = True
-            asyncio.get_event_loop().run_until_complete(self.wait_attack())
+            #print("is there lag yet?")
+            self.attackDelayActive = True
+            
+            print(1)
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(self.wait_attack());
+            #loop.close()
+            print(2)
             
             self.__entityState__ = EntityState.ATTACKING
-            enemy.set_health(enemy.get_health() - self.damage)"""
+            enemy.set_health(enemy.get_health() - self.damage)
