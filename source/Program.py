@@ -2,6 +2,7 @@ import time
 import threading
 import sys
 import os
+import pickle
 
 import pygame
 
@@ -75,9 +76,10 @@ class Program():
         # if activeGame is None, then use is in menu
         # if activeGame points to a Game, then in game
         self.activeGame = None
-        
+        self.activeGameLock = True
+        #self.activeGameLock.acquire(True)
         # get rid of this line?
-        self.activeGame = Game(self.WIN_WIDTH, self.WIN_HEIGHT)
+        #self.activeGame = Game(self.WIN_WIDTH, self.WIN_HEIGHT)
         
         # pygame initialization
         pygame.init()
@@ -86,6 +88,36 @@ class Program():
         pygame.display.set_icon(load_img(self.WIN_ICON_FILENAME))
         
         # make the ui
+        play = UITextComponent()
+        play.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT * 0.40)
+        play.set_size(self.WIN_WIDTH * 0.10, TILE_SCALE * 2)
+        play.set_visible(True)
+        play.name = "UI 1"
+        play.on_clicked = self.__on_play__
+        play.text = "Play"
+        play.borderSize = 1
+        self.uiComponents.append(play)
+
+        load = UITextComponent()
+        load.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT * 0.60)
+        load.set_size(self.WIN_WIDTH * 0.10, TILE_SCALE * 2)
+        load.set_visible(True)
+        load.name = "UI 1"
+        load.text = "Load"
+        load.borderSize = 1
+        load.on_clicked = self.__on_load__
+        self.uiComponents.append(load)
+        
+        
+        savefiles = UITextComponent()
+        savefiles.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT * 0.80)
+        savefiles.set_size(self.WIN_WIDTH * 0.10, TILE_SCALE * 2)
+        savefiles.set_visible(False)
+        savefiles.name = "Saves"
+        savefiles.text = ""
+        savefiles.borderSize = 1
+        self.uiComponents.append(savefiles)
+        
         u = UITextComponent()
         u.set_size(self.WIN_WIDTH, self.WIN_HEIGHT / 6)
         u.set_pos(self.WIN_WIDTH * 0.5, self.WIN_HEIGHT - u.get_size_y() / 2)
@@ -117,6 +149,85 @@ class Program():
         # threads should be killed manually
         self.drawThread.start()
         self.event_loop()
+
+
+
+
+    """
+        ==============================================================================
+        
+        Method: on_play
+        
+        Description: Called when the play button is clicked, gets the users name
+                     and then starts the active game. Saves the file on startup
+                     and removes other ui components
+        
+        Author: Douglas Walsh
+        
+        History:
+        
+        ==============================================================================
+    """
+    def __on_play__(self):
+            file = input("Name: ")
+            self.activeGame = Game(self.WIN_WIDTH, self.WIN_HEIGHT)
+            self.activeGameLock = False 
+            for uiComp in self.uiComponents:
+                uiComp.set_visible(False)
+            #self.uiComponents[0].set_visible(False)
+            pickle.dump(self.activeGame, open("data\\" + file + ".pythonica", "wb"))
+    """
+        ==============================================================================
+        
+        Method: on_load
+        
+        Description: Called when the load button is clicked. Opens the
+        file designated by the user then loads it using pickle. Deletes other ui
+        elements
+        
+        Author: Douglas Walsh
+        
+        History: The function pickle was tested and it's working.
+		Once we verified that is is actually a class, the error must be on redefining the activeGame.
+		
+		Load = Class : VERIFIED.
+		self.activeGame = Something : WORKS.
+		self.activeGame = Load : BREAKS.
+		Error: ON LOAD PROBABLY.
+        
+        ==============================================================================
+    """		
+    def __on_load__(self):
+            ui = self.uiComponents[2]
+            #file = input("--")
+            test = "data\\" + "popalameda.pythonica"
+            load = pickle.load(open(test,"rb"))
+            self.activeGame = Game(self.WIN_WIDTH, self.WIN_HEIGHT)
+            self.activeGameLock = False
+            #self.activeGameLock.release()
+            print(test)
+            print((pickle.load(open(test, "rb"))))
+            print((self.activeGame))
+            for uiComp in self.uiComponents:
+                uiComp.set_visible(False)  
+            #ui.text = os.listdir("data\\")[0]
+		
+            #self.activeGame = Game(self.WIN_WIDTH, self.WIN_HEIGHT)			#temporarily here until i get file selection in order||load(open("data\\" + self.activeGame.username + ".py", "rb"))
+    """
+        ==============================================================================
+        
+        Method: on_save
+        
+        Description: Saves the active game
+        
+        Author: Douglas Walsh
+        
+        History:
+        
+        ==============================================================================
+    """
+    def __on_save__(self):
+            pickle.dump(self.activeGame, open("data\\" + self.activeGame.username + ".pythonica", "wb"))
 
     """
         ==============================================================================
@@ -161,8 +272,8 @@ class Program():
         
         ret = False
         
-        xCondition = x <= transform.get_pos_x() + transform.get_size_x() * 0.5 and mX > transform.get_pos_x() - transform.get_size_x() * 0.5
-        yCondition = y <= transform.get_pos_y() + transform.get_size_y() * 0.5 and mY > transform.get_pos_y() - transform.get_size_y() * 0.5
+        xCondition = x <= transform.get_pos_x() + transform.get_size_x() * 0.5 and x > transform.get_pos_x() - transform.get_size_x() * 0.5
+        yCondition = y <= transform.get_pos_y() + transform.get_size_y() * 0.5 and y > transform.get_pos_y() - transform.get_size_y() * 0.5
         
         ret = xCondition and yCondition
         return ret
@@ -296,23 +407,24 @@ class Program():
                     elif rawKey == pygame.K_d:
                         self.input.set_pos_x(-self.input.get_pos_x() - 1)
             
-            if self.activeGame:
-                self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
+            if self.activeGame and not self.activeGameLock:
                 
+                    
+                self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
                 # ensure entities cannot walk into tiles
                 for entity in self.activeGame.currentRoom.entities:             
                     for tile in self.activeGame.currentRoom.tiles:
                         if tile.isBlocking:
-                        
+                                
                             a = tile.get_pos_x() - entity.get_pos_x()
                             b = tile.get_pos_y() - entity.get_pos_y()
-                            
+                                
                             xDir = clamp01(a)
                             yDir = clamp01(b)
-                            
+                                
                             c = abs(a)
                             d = abs(b)
-                        
+
                             if self.__colliding_x__(entity, tile) and self.__colliding_y__(entity, tile):
                                 if entity.get_move_x() == xDir and (c > d):
                                     entity.set_move_x(0)
@@ -391,13 +503,15 @@ class Program():
             
             self.pySurface.fill(self.FILL_COLOR)
             
-            if self.activeGame:
+            if self.activeGame and not self.activeGameLock:
+
+                print("test")
                 for tile in self.activeGame.currentRoom.tiles:
                     tile.draw(self.pySurface)
                 for entity in self.activeGame.currentRoom.entities:
                     entity.draw(self.pySurface)
                     entity.animate()
-                
+               
             for ui in self.uiComponents:
                 if ui.get_visible():
                     self.__draw_ui__(ui)
