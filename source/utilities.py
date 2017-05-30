@@ -186,3 +186,25 @@ def distance(t1, t2):
     dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
     return dist
 
+"""
+    ==============================================================================
+    
+    Method: get_polarity_of
+
+    Description: Returns a 1 or -1 given a float, indicting its' polarity.
+    Use to check if a positive or negative number.  Checks if the denominator
+    is zero to avoid a division by zero error.
+
+    Author: Jason Milhaven
+        
+    History:
+        
+    ==============================================================================
+"""
+    
+def get_polarity_of(v):
+    ret = 0
+    denom = abs(v)
+    if (denom != 0):
+        ret = v / denom
+    return ret

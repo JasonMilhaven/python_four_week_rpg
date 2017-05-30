@@ -20,3 +20,10 @@ class TestMonster(Monster):
 
     def __init__(self, posX = 0, posY = 0, room = None):
         super().__init__(posX, posY, room)
+        self.offsets = [
+            (100, 0),
+            (0, 100),
+            (-100, 0),
+            (0, -100)
+        ]
+        self.moveSpeed = 100

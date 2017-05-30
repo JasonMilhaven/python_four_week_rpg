@@ -1,4 +1,5 @@
 import time
+import asyncio
 
 from enum import *
 
@@ -45,7 +46,7 @@ class EntityState(Enum):
     
     ******************************************************************************
 """
-        
+
 class Entity(Transform):
 
     """
@@ -81,8 +82,10 @@ class Entity(Transform):
         self.maxHealth = 100
         self.__health__ = self.maxHealth
         self.damage = 0
-        self.moveSpeed = 250 #500
-        self.range = 2
+        self.attackDelay = 0.2
+        self.attackDelayActive = False
+        self.moveSpeed = 250
+        self.range = 300
         self.room = room
         
         # likely to go unused
@@ -93,6 +96,7 @@ class Entity(Transform):
         self.__entityState__ = EntityState.IDLING
         self.anims = [
             load_img("e1.png"),
+            load_img("e2.5.png"),
             load_img("e2.png"),
             load_img("e3.png")
         ]
@@ -175,7 +179,7 @@ class Entity(Transform):
     """
     
     def __check_moving__(self):
-        if abs(self.get_move_x()) + abs(self.get_move_y()) == 0:
+        if ((abs(self.get_move_x()) + abs(self.get_move_y()) == 0) and self.__entityState__ != EntityState.ATTACKING):
             self.__entityState__ = EntityState.IDLING
         else:
             self.__entityState__ = EntityState.WALKING
@@ -203,8 +207,29 @@ class Entity(Transform):
             if timePassed >= self.ANIM_WALK_DELAY:
                 self.img = self.anims[1]
                 self.lastTime = time.time()
+            else:
+                self.img = self.anims[2]
         if self.__entityState__ == EntityState.ATTACKING:
-            self.img = self.anims[2]
+            self.img = self.anims[3]
+        
+    """
+        ==============================================================================
+        
+        Method: pre_update
+        
+        Description: Called by main program in the game loop before update is called, runs before
+        collisions are checked.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+        
+    def pre_update(self, frameDelta):
+        pass
         
     """
         ==============================================================================
@@ -227,6 +252,17 @@ class Entity(Transform):
         self.set_pos(newX, newY)
     
     """
+    
+    """
+    
+    async def wait_attack(self):
+        print("wait attack begin")
+        
+        await asyncio.sleep(self.attackDelay)
+        print("wait attack end")
+        self.attackDelayActive = False
+    
+    """
         ==============================================================================
         
         Method: attack
@@ -242,5 +278,10 @@ class Entity(Transform):
     """
     
     def attack(self, enemy):
-        self.__entityState__ = EntityState.ATTACKING
-        enemy.set_health(enemy.get_health() - self.damage)
+        if (not self.attackDelayActive):
+            self.attackDelayActive = True
+            asyncio.get_event_loop().run_until_complete(self.wait_attack())
+        
+        if distance(self, enemy) <= self.range:
+            self.__entityState__ = EntityState.ATTACKING
+            enemy.set_health(enemy.get_health() - self.damage)
