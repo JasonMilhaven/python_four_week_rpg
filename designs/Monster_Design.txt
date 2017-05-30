@@ -1,0 +1,49 @@
+
+Design Number: 3
+Author(s): Jason, Ben
+
+
+class Monster derives from Entity
+
+ constructor()
+  call super constructor given parameters
+  
+  sightRadius = 5
+
+  all members are PRIVATE:  
+
+  int array offsets
+  example of a subclass offset:
+  offsets = {
+   (5, 0)  move right 5
+   (0, 5)  move down 5
+   (-5, 0) move left 5
+   (0, -5) move up 5
+  }
+
+  offsetStartingPoint = (starting x position, starting y position)
+  currentOffset = 0
+
+
+ next_offset()
+  if currentOffset >= length of offsets array - 1
+   currentOffset = 0
+  else
+   currentOffset += 1
+
+
+ update(frameDelta)
+  super.update(frameDelta)
+  
+  if posX >= offsetStartingPoint.x + offsets[currentOffsets] and posY >= offsetStartingPoint.y + offsets[currentOffsets]
+   next_offset()
+
+  if moveX == 0 and moveY == 0
+   next_offset()
+
+  if distance between self and player <= sightRadius
+   moveX = clamp01(player.posX - self.posX)
+   moveY = clamp01(player.posY - self.posY)
+   
+  if distance between self and player <= range
+   attack(player)
