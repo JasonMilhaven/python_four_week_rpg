@@ -1,5 +1,7 @@
 import time
 import asyncio
+#from concurrent.futures import ProcessPoolExecutor
+import concurrent.futures
 
 from enum import *
 
@@ -84,7 +86,8 @@ class Entity(Transform):
         self.damage = 0
         self.attackDelay = 1 #0.2
         print("attackDelay set to 1")
-        self.attackDelayActive = False
+        #self.attackDelayActive = False
+        self.attackDelayAccumulator = 0.0
         self.moveSpeed = 250
         self.range = 300
         self.room = room
@@ -268,6 +271,8 @@ class Entity(Transform):
     """
     
     def update(self, frameDelta):
+        self.attackDelayAccumulator += frameDelta
+        
         newX = self.get_pos_x() + self.get_move_x() * self.moveSpeed * frameDelta
         newY = self.get_pos_y() + self.get_move_y() * self.moveSpeed * frameDelta
         self.set_pos(newX, newY)
@@ -287,13 +292,16 @@ class Entity(Transform):
         ==============================================================================
     """
     
-    async def wait_attack(self):
+    def wait_attack(self, future):
         print("wait attack begin")
         
-        await asyncio.sleep(self.attackDelay)
-        #await self.attackDelay
+        #await asyncio.sleep(self.attackDelay)
+        #await asyncio.sleep(self.attackDelay)
+        
+        #self.attackDelayActive = False
+        print("moveSpeed is: " + str(self.moveSpeed))
+        self.trash()
         print("wait attack end")
-        self.attackDelayActive = False
     
     """
         ==============================================================================
@@ -310,16 +318,25 @@ class Entity(Transform):
         ==============================================================================
     """
     
-    """ this method is slowing the game """
     def attack(self, enemy):
-        if (not self.attackDelayActive) and (distance(self, enemy) <= self.range):
+        #print(self.attackDelayActive)
+        if (self.attackDelayAccumulator >= self.attackDelay) and (distance(self, enemy) <= self.range):
+            self.attackDelayAccumulator = 0.0
             #print("is there lag yet?")
-            self.attackDelayActive = True
             
             print(1)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(self.wait_attack());
+            #loop = asyncio.get_event_loop()
+            #loop.run_until_complete(self.wait_attack());
             #loop.close()
+            
+            #pool = ProcessPoolExecutor(3)
+            #pool.submit(self.wait_attack)
+            #pool.submit(Entity.wait_attack, (self))
+            
+            #loop = asyncio.get_event_loop()
+            #future = asyncio.Future()
+            #asyncio.ensure_future(self.wait_attack(future))
+            #loop.run_until_complete(future)
             print(2)
             
             self.__entityState__ = EntityState.ATTACKING

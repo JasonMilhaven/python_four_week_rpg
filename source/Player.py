@@ -36,7 +36,9 @@ class Player(Entity):
         super().__init__(posX, posY, room)
         
         self.anims[0] = load_img("player.png")
+        self.anims[1] = load_img("walking.png")
         
         
     def delayed_update(self, frameDelta):
-        print("frameDelta is: " + str(frameDelta))
+        super().delayed_update(frameDelta)
+    

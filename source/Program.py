@@ -419,6 +419,8 @@ class Program():
     
     def draw_loop(self):
         #while self.isRunning:
+        
+        # not a very elegant fix, but there's no time left to make this prettier
         if self.isRunning:
             frameDelta = time.time() - self.lastDrawTime
             self.lastDrawTime = time.time()
