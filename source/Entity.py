@@ -89,7 +89,7 @@ class Entity(Transform):
         #self.attackDelayActive = False
         self.attackDelayAccumulator = 0.0
         self.moveSpeed = 250
-        self.range = 300
+        self.range = 25
         self.room = room
         
         # likely to go unused
@@ -168,6 +168,25 @@ class Entity(Transform):
     # setter for health
     def set_health(self, v):
         self.__health__ = v
+    
+    """
+        ==============================================================================
+        
+        Method: on_clicked
+        
+        Description: Called from program when user clicks entity during an active game.
+        It is up to subclasses to differentiate between when the player and when Monsters
+        are clicked on.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+    def on_clicked(self):
+        pass
     
     """
         ==============================================================================
@@ -287,17 +306,18 @@ class Entity(Transform):
         
         Author: Jason Milhaven
         
-        History:
+        History: Is not being used for the time being and throws error upon
+        invocation.
         
         ==============================================================================
     """
     
     def wait_attack(self, future):
+        raise NotImplementedError("wait_attack routine is depricated")
+    
         print("wait attack begin")
-        
         #await asyncio.sleep(self.attackDelay)
         #await asyncio.sleep(self.attackDelay)
-        
         #self.attackDelayActive = False
         print("moveSpeed is: " + str(self.moveSpeed))
         self.trash()
@@ -324,7 +344,6 @@ class Entity(Transform):
             self.attackDelayAccumulator = 0.0
             #print("is there lag yet?")
             
-            print(1)
             #loop = asyncio.get_event_loop()
             #loop.run_until_complete(self.wait_attack());
             #loop.close()
@@ -337,7 +356,6 @@ class Entity(Transform):
             #future = asyncio.Future()
             #asyncio.ensure_future(self.wait_attack(future))
             #loop.run_until_complete(future)
-            print(2)
             
             self.__entityState__ = EntityState.ATTACKING
             enemy.set_health(enemy.get_health() - self.damage)

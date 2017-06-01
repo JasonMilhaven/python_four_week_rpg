@@ -40,7 +40,10 @@ class Monster(Entity):
             raise TypeError("please use the TestMonster class instead of direct Monster instantiation")
         super().__init__(posX, posY, room)
         
-        self.sightRange = 500
+        # time that must pass before Monster can choose a target again
+        self.FOLLOW_TARGET_TIMEOUT = 0.5
+        
+        self.sightRange = 300
         self.offsets = [
             (100, 0),
             (0, 100),
@@ -50,12 +53,26 @@ class Monster(Entity):
         self.__offsetStartingPoint__ = self.get_pos()
         self.__currentOffset__ = 0
         self.__totalOffsetsCompleted__ = 0
-        self.target = None
+        self.__target__ = None
+        #self.target = None
         self.room = room
+        self.moveSpeed = 100
+        
+        # add frameDelta to this when stopped following player
+        self.followTargetAccumulator = self.FOLLOW_TARGET_TIMEOUT
         
         if self.room:
             self.room.entities.append(self)
-        
+    
+    # getter for target
+    def get_target(self):
+        return self.__target__
+    
+    # setter for target
+    def set_target(self, v):
+        #print("set target to: " + str(v))
+        self.__target__ = v
+    
     """
         ==============================================================================
         
@@ -108,13 +125,30 @@ class Monster(Entity):
         
         ==============================================================================
     """
-        
+    
     def _on_offset_completed_(self, completedIndex, newIndex, totalOffsetsCompleted):
-        # wtf is this trash
         #print("offset completed")
         #raise NotImplementedError("use this for Monster subclasses")
         pass
+    
+    """
+        ==============================================================================
         
+        Method: on_clicked
+        
+        Description: Override Entity on_clicked.  Makes the player try to attack self.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
+    def on_clicked(self):
+        print("on mons clicked")
+        self.room.player.attack(self)
+    
     """
         ==============================================================================
         
@@ -142,7 +176,21 @@ class Monster(Entity):
         newIndex = self.__currentOffset__
         self._on_offset_completed_(completedIndex, newIndex, self.__totalOffsetsCompleted__)
     
-    # comment this when done
+    
+    """
+        ==============================================================================
+        
+        Method: try_offset
+        
+        Description: Checks to see when the Monster should do its' next offset.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+    
     def try_offset(self):
         xStart = self.__offsetStartingPoint__[0]
         yStart = self.__offsetStartingPoint__[1]
@@ -169,11 +217,12 @@ class Monster(Entity):
         Method: try_attack
         
         Description: Check for player position, if the player is within the sightRange
-        field of this instance, move towards and attack player.
+        field of this instance, if the target is null, and the Monster has completely
+        waited it's FOLLOW_TARGET_TIMEOUT, then move towards and attack player.
         
         Author: Jason Milhaven
         
-        History:
+        History: Added a null check and FOLLOW_TARGET_TIMEOUT check in conditional.
         
         ==============================================================================
     """
@@ -181,14 +230,21 @@ class Monster(Entity):
     def try_attack(self):
         # update this conditional with a list of enemies
         # if monsters should ever attack each other?
-        if distance(self, self.room.player) <= self.sightRange:
-            self.target = self.room.player
-        else:
-            self.target = None
+        inRange = distance(self, self.room.player) <= self.sightRange
+        
+        if (inRange) and (self.followTargetAccumulator >= self.FOLLOW_TARGET_TIMEOUT) and not self.get_target():
+            # reset the target accu
+            self.followTargetAccumulator = 0.0
+            # then set the target
+            self.set_target(self.room.player)
+        elif (not inRange):
+            self.set_target(None)
+        #else:
+        #    self.set_target(None)
             
-        if (self.target):
-            self.attack(self.target)
-            self.set_move(self.target.get_pos_x() - self.get_pos_x(), self.target.get_pos_y() - self.get_pos_y())
+        if (self.get_target()):
+            self.attack(self.get_target())
+            self.set_move(self.get_target().get_pos_x() - self.get_pos_x(), self.get_target().get_pos_y() - self.get_pos_y())
     
     """
         ==============================================================================
@@ -249,6 +305,16 @@ class Monster(Entity):
     
     def update(self, frameDelta):
         super().update(frameDelta)
+        
+        # if no target, add to follow accu
+        if not self.get_target():
+            self.followTargetAccumulator += frameDelta
+        
+        # if not moving, try next offset?
+        if self.get_move() == (0, 0) and self.get_target():
+            self.set_target(None)
+            self.followTargetAccumulator = 0.0
+            self.next_offset()
         
         # if the polarity of the current x offset is not equal to move x
         # or the condition applies on the y-axis

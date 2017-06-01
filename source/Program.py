@@ -141,7 +141,7 @@ class Program():
         self.isRunning = False
         
         # kill any threads here
-        self.drawThread.join()
+        #self.drawThread.join()
         
         pygame.quit()
         sys.exit(0)
@@ -242,6 +242,7 @@ class Program():
         while self.isRunning:
             self.draw_loop()
             mX, mY = pygame.mouse.get_pos()
+            isClick = False
             
             frameDelta = time.time() - self.lastEventTime
             self.lastEventTime = time.time()
@@ -250,6 +251,7 @@ class Program():
                 if event.type == pygame.QUIT:
                     self.close()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    isClick = True
                     clickedUI = None
                     
                     # REVERSE the ui click detection, very important
@@ -327,7 +329,11 @@ class Program():
                 # ensure entities cannot walk into tiles
                 for entity in self.activeGame.currentRoom.entities:
                     entity.pre_update(frameDelta)
-                
+                    
+                    if isClick:
+                        if self.__is_in__(mX, mY, entity):
+                            entity.on_clicked()
+                    
                     for tile in self.activeGame.currentRoom.tiles:
                         if tile.isBlocking:
                         
@@ -440,6 +446,6 @@ class Program():
                     ui.draw(self.pySurface);
 
                 
-            self.pyClock.tick(60)
+            #self.pyClock.tick(60)
             pygame.display.update()
         
