@@ -41,5 +41,30 @@ class Game():
         self.rooms = []
         self.player = Player()
         
-        self.rooms.append(Room(width, height, self.player))
-        self.currentRoom = self.rooms[0]
+        self.width = width
+        self.height = height
+        
+        self.new_room()
+        
+    """
+        ==============================================================================
+        
+        Method: new_room
+        
+        Description: Creates a room given self's width and height, the new room object
+        is set to the current room and appended to the room list for serialization.
+        
+        Author: Jason Milhaven
+        
+        History:
+        
+        ==============================================================================
+    """
+
+    def new_room(self):
+        print("NEW ROOM CREATED")
+        r = Room(self.width, self.height, self.player)
+        self.rooms.append(r)
+        self.currentRoom = r
+        
+        

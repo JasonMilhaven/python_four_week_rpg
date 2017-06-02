@@ -55,6 +55,10 @@ class Player(Entity):
     def delayed_update(self, frameDelta):
         super().delayed_update(frameDelta)
     
+    # override update?
+    def update(self, frameDelta):
+        super().update(frameDelta)
+    
     """
         ==============================================================================
         

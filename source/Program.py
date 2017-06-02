@@ -326,6 +326,18 @@ class Program():
             if self.activeGame:
                 self.activeGame.player.set_move(self.input.get_pos_x(), self.input.get_pos_y())
                 
+                # if player position exceeds Window width or height, create a new room
+                # then inverse player position on corresponding axis
+                playerPosX, playerPosY = self.activeGame.player.get_pos()
+                print("trahs: " + str(abs(playerPosX)))
+                print("trash: " + str(self.WIN_WIDTH))
+                if (playerPosX >= self.WIN_WIDTH) or playerPosX <= 0:
+                    self.activeGame.player.set_pos_x(-self.activeGame.player.get_pos_x())
+                    self.activeGame.new_room()
+                if (playerPosY >= self.WIN_HEIGHT) or playerPosY <= 0:
+                    self.activeGame.player.set_pos_y(-self.activeGame.player.get_pos_y())
+                    self.activeGame.new_room()
+                
                 # ensure entities cannot walk into tiles
                 for entity in self.activeGame.currentRoom.entities:
                     entity.pre_update(frameDelta)
